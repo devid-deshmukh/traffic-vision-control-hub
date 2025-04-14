@@ -12,7 +12,7 @@ import {
   AlertTriangle,
   ArrowRight,
   Car,
-  Hardhat,
+  HardHat,
   Clock,
   MapPin,
 } from "lucide-react";
@@ -76,7 +76,7 @@ export default function IncidentsList() {
       case "accident":
         return <Car className="h-4 w-4" />;
       case "construction":
-        return <Hardhat className="h-4 w-4" />;
+        return <HardHat className="h-4 w-4" />;
       case "closure":
         return <AlertTriangle className="h-4 w-4" />;
       case "congestion":
