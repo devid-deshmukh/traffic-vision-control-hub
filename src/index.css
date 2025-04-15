@@ -5,34 +5,34 @@
 
 @layer base {
   :root {
-    /* Light mode colors - reset to original values */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Light mode colors - updated as per request */
+    --background: 0 0% 98%;  /* #F9FAFB */
+    --foreground: 222 47% 11%;  /* #111827 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;  /* #FFFFFF */
+    --card-foreground: 222 47% 11%;  /* #111827 */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;  /* #FFFFFF */
+    --popover-foreground: 222 47% 11%;  /* #111827 */
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 217 91% 53%;  /* #2563EB */
+    --primary-foreground: 0 0% 100%;  /* #FFFFFF */
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 142 72% 45%;  /* #22C55E */
+    --secondary-foreground: 222 47% 11%;  /* #111827 */
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 220 14% 96%;  /* #F1F5F9 */
+    --muted-foreground: 220 9% 46%;  /* #6B7280 */
 
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 217 91% 53%;  /* #2563EB */
+    --accent-foreground: 0 0% 100%;  /* #FFFFFF */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;  /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;  /* #FFFFFF */
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --border: 220 13% 91%;  /* #E5E7EB */
+    --input: 220 13% 91%;  /* #E5E7EB */
+    --ring: 217 91% 53%;  /* #2563EB */
     
     --radius: 0.75rem;
 
@@ -41,14 +41,14 @@
     --traffic-yellow: 47 96% 53%;  /* #FACC15 - moderate congestion */
     --traffic-red: 0 84% 60%;  /* #EF4444 - severe congestion */
 
-    --sidebar-background: 240 4.8% 95.9%;
-    --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 240 5.9% 90%;
-    --sidebar-ring: 240 5.9% 10%;
+    --sidebar-background: 220 14% 96%;  /* #F1F5F9 */
+    --sidebar-foreground: 222 47% 11%;  /* #111827 */
+    --sidebar-primary: 217 91% 53%;  /* #2563EB */
+    --sidebar-primary-foreground: 0 0% 100%;  /* #FFFFFF */
+    --sidebar-accent: 220 14% 96%;  /* #F1F5F9 */
+    --sidebar-accent-foreground: 222 47% 11%;  /* #111827 */
+    --sidebar-border: 220 13% 91%;  /* #E5E7EB */
+    --sidebar-ring: 217 91% 53%;  /* #2563EB */
   }
 
   .dark {
