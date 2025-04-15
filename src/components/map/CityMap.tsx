@@ -2,38 +2,169 @@
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Layers, Map as MapIcon, Activity, CloudRain, AlertTriangle } from 'lucide-react';
+import { Layers, Map as MapIcon, Activity, CloudRain, AlertTriangle, ZoomIn, ZoomOut, RotateCw } from 'lucide-react';
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 // This is a placeholder for the 3D map - in a real app, you'd use something like MapBox, Google Maps, or Three.js
 export default function CityMap() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedTab, setSelectedTab] = useState("traffic");
+  const [mapMode, setMapMode] = useState<"2d" | "3d">("3d");
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [mouseDown, setMouseDown] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
+  const [mapPosition, setMapPosition] = useState({ x: 0, y: 0 });
+  const [showTrafficLayers, setShowTrafficLayers] = useState({
+    congestion: true,
+    volume: true,
+    speed: true,
+    signals: false
+  });
+  const [weatherLayers, setWeatherLayers] = useState({
+    rain: false,
+    temp: false,
+    wind: false,
+    visibility: false
+  });
+  const [incidentLayers, setIncidentLayers] = useState({
+    accidents: true,
+    construction: true,
+    events: false,
+    closures: true
+  });
+  const [forecastTime, setForecastTime] = useState(30);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Simulate map loading
     const timer = setTimeout(() => {
       setIsLoading(false);
+      toast({
+        title: "Map loaded",
+        description: "3D traffic map is now ready to use.",
+      });
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [toast]);
+
+  // Functions for map interactions
+  const zoomIn = () => {
+    if (zoom < 3) {
+      setZoom(prev => prev + 0.2);
+    }
+  };
+
+  const zoomOut = () => {
+    if (zoom > 0.5) {
+      setZoom(prev => prev - 0.2);
+    }
+  };
+
+  const rotate = () => {
+    setRotation(prev => (prev + 45) % 360);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 0) { // Left click only
+      setMouseDown(true);
+      setStartPosition({ x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (mouseDown) {
+      setIsDragging(true);
+      const dx = e.clientX - startPosition.x;
+      const dy = e.clientY - startPosition.y;
+      setMapPosition({
+        x: mapPosition.x + dx / 50,
+        y: mapPosition.y + dy / 50
+      });
+      setStartPosition({ x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setMouseDown(false);
+    setTimeout(() => setIsDragging(false), 100);
+  };
+
+  const handleTrafficLayerChange = (id: keyof typeof showTrafficLayers) => {
+    setShowTrafficLayers(prev => {
+      const newState = { ...prev, [id]: !prev[id] };
+      toast({
+        title: newState[id] ? `${id.charAt(0).toUpperCase() + id.slice(1)} layer enabled` : `${id.charAt(0).toUpperCase() + id.slice(1)} layer disabled`,
+        description: newState[id] ? `Showing ${id} data on the map.` : `Hidden ${id} data from the map.`,
+      });
+      return newState;
+    });
+  };
+
+  const handleWeatherLayerChange = (id: keyof typeof weatherLayers) => {
+    setWeatherLayers(prev => {
+      const newState = { ...prev, [id]: !prev[id] };
+      toast({
+        title: newState[id] ? `${id.charAt(0).toUpperCase() + id.slice(1)} layer enabled` : `${id.charAt(0).toUpperCase() + id.slice(1)} layer disabled`,
+        description: newState[id] ? `Showing ${id} data on the map.` : `Hidden ${id} data from the map.`,
+      });
+      return newState;
+    });
+  };
+
+  const handleIncidentLayerChange = (id: keyof typeof incidentLayers) => {
+    setIncidentLayers(prev => {
+      const newState = { ...prev, [id]: !prev[id] };
+      toast({
+        title: newState[id] ? `${id.charAt(0).toUpperCase() + id.slice(1)} layer enabled` : `${id.charAt(0).toUpperCase() + id.slice(1)} layer disabled`,
+        description: newState[id] ? `Showing ${id} data on the map.` : `Hidden ${id} data from the map.`,
+      });
+      return newState;
+    });
+  };
+
+  const handleForecastTimeChange = (value: number[]) => {
+    setForecastTime(value[0]);
+    toast({
+      title: "Forecast time updated",
+      description: `Showing traffic prediction for +${value[0]} minutes.`,
+    });
+  };
 
   return (
     <Card className="h-full overflow-hidden relative">
-      <Tabs defaultValue="traffic" className="h-full flex flex-col">
+      <Tabs 
+        defaultValue="traffic" 
+        className="h-full flex flex-col"
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+      >
         <div className="flex items-center justify-between px-4 py-2 border-b">
           <div className="flex items-center gap-2">
             <MapIcon className="h-5 w-5 text-primary" />
             <h3 className="font-medium">3D City Map</h3>
           </div>
-          <TabsList>
-            <TabsTrigger value="traffic">Traffic</TabsTrigger>
-            <TabsTrigger value="weather">Weather</TabsTrigger>
-            <TabsTrigger value="incidents">Incidents</TabsTrigger>
-          </TabsList>
+          <div className="flex items-center gap-2">
+            <ToggleGroup type="single" value={mapMode} onValueChange={(value) => {
+              if (value) setMapMode(value as "2d" | "3d");
+            }}>
+              <ToggleGroupItem value="2d" size="sm">2D</ToggleGroupItem>
+              <ToggleGroupItem value="3d" size="sm">3D</ToggleGroupItem>
+            </ToggleGroup>
+            <TabsList>
+              <TabsTrigger value="traffic">Traffic</TabsTrigger>
+              <TabsTrigger value="weather">Weather</TabsTrigger>
+              <TabsTrigger value="incidents">Incidents</TabsTrigger>
+            </TabsList>
+          </div>
         </div>
         
         <CardContent className="flex-1 p-0 relative">
@@ -45,10 +176,21 @@ export default function CityMap() {
             <>
               <div 
                 ref={mapContainerRef}
-                className="h-full w-full bg-gradient-to-br from-gray-900 to-gray-800"
+                className="h-full w-full bg-gradient-to-br from-gray-900 to-gray-800 relative"
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                style={{ 
+                  transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                  transition: "transform 0.3s ease",
+                  cursor: mouseDown ? 'grabbing' : 'grab'
+                }}
               >
                 {/* Simplified placeholder map with traffic visualization */}
-                <div className="w-full h-full relative overflow-hidden">
+                <div className="w-full h-full relative overflow-hidden" style={{ 
+                  transform: `translate(${mapPosition.x}%, ${mapPosition.y}%)`,
+                }}>
                   {/* City grid overlay */}
                   <svg className="absolute inset-0 w-full h-full opacity-40" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -64,43 +206,49 @@ export default function CityMap() {
                     {/* Horizontal main road with heavy traffic (red) */}
                     <path 
                       d="M 0,250 L 1000,250" 
-                      stroke="#ef4444" 
+                      stroke={showTrafficLayers.congestion ? "#ef4444" : "#999999"} 
                       strokeWidth="8"
                       strokeLinecap="round"
+                      style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     
                     {/* Vertical main road with moderate traffic (yellow) */}
                     <path 
                       d="M 500,0 L 500,600" 
-                      stroke="#f59e0b" 
+                      stroke={showTrafficLayers.congestion ? "#f59e0b" : "#999999"} 
                       strokeWidth="8"
                       strokeLinecap="round"
+                      style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     
                     {/* Secondary roads with free-flowing traffic (green) */}
                     <path 
                       d="M 200,0 L 200,600" 
-                      stroke="#22c55e" 
+                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
                       strokeWidth="5"
                       strokeLinecap="round"
+                      style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     <path 
                       d="M 800,0 L 800,600" 
-                      stroke="#22c55e" 
+                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
                       strokeWidth="5"
                       strokeLinecap="round"
+                      style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     <path 
                       d="M 0,400 L 1000,400" 
-                      stroke="#22c55e" 
+                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
                       strokeWidth="5"
                       strokeLinecap="round"
+                      style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     <path 
                       d="M 0,100 L 1000,100" 
-                      stroke="#22c55e" 
+                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
                       strokeWidth="5"
                       strokeLinecap="round"
+                      style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     
                     {/* Traffic flow animation */}
@@ -110,6 +258,7 @@ export default function CityMap() {
                       strokeWidth="2"
                       strokeDasharray="10,15"
                       className="animate-traffic-flow"
+                      style={{ display: showTrafficLayers.speed ? "block" : "none" }}
                     />
                     <path 
                       d="M 500,0 L 500,600" 
@@ -117,12 +266,70 @@ export default function CityMap() {
                       strokeWidth="2"
                       strokeDasharray="10,15"
                       className="animate-traffic-flow"
+                      style={{ display: showTrafficLayers.speed ? "block" : "none" }}
                     />
                     
-                    {/* Incident marker */}
-                    <circle cx="500" cy="250" r="15" fill="#ef4444" className="animate-pulse-slow" />
-                    <text x="500" y="255" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">!</text>
+                    {/* Incident markers */}
+                    {incidentLayers.accidents && (
+                      <g style={{ cursor: "pointer" }} onClick={() => {
+                        toast({
+                          title: "Accident Selected",
+                          description: "Major collision at Downtown Intersection, 2 vehicles involved.",
+                        });
+                      }}>
+                        <circle cx="500" cy="250" r="15" fill="#ef4444" className="animate-pulse-slow" />
+                        <text x="500" y="255" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">!</text>
+                      </g>
+                    )}
+                    
+                    {incidentLayers.construction && (
+                      <g style={{ cursor: "pointer" }} onClick={() => {
+                        toast({
+                          title: "Construction Selected",
+                          description: "Road work on Northern Avenue, expected completion in 3 days.",
+                        });
+                      }}>
+                        <circle cx="200" cy="400" r="15" fill="#f59e0b" className="animate-pulse-slow" />
+                        <text x="200" y="405" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">C</text>
+                      </g>
+                    )}
+                    
+                    {weatherLayers.rain && (
+                      <>
+                        {/* Simple weather overlay */}
+                        <rect x="0" y="0" width="100%" height="100%" fill="rgba(0, 0, 255, 0.1)" />
+                        {/* Rain drops */}
+                        {Array.from({ length: 50 }).map((_, i) => (
+                          <line 
+                            key={i}
+                            x1={Math.random() * 1000} 
+                            y1={Math.random() * 600}
+                            x2={Math.random() * 1000 + 10} 
+                            y2={Math.random() * 600 + 10}
+                            stroke="rgba(135, 206, 250, 0.6)"
+                            strokeWidth="1"
+                            className="animate-pulse-slow"
+                          />
+                        ))}
+                      </>
+                    )}
                   </svg>
+                  
+                  {/* Traffic signals */}
+                  {showTrafficLayers.signals && (
+                    <div style={{ position: "absolute", left: "495px", top: "240px", cursor: "pointer" }}
+                      onClick={() => {
+                        toast({
+                          title: "Traffic Signal Selected",
+                          description: "Main intersection signal. Current phase: North-South green.",
+                        });
+                      }}
+                    >
+                      <div className="h-10 w-10 bg-black/50 rounded-md flex items-center justify-center border-2 border-white">
+                        <div className="h-6 w-6 rounded-full bg-green-500"></div>
+                      </div>
+                    </div>
+                  )}
                   
                   {/* Buildings */}
                   <div className="absolute left-[420px] top-[160px] w-20 h-40 bg-blue-900/80 rounded"></div>
@@ -134,6 +341,34 @@ export default function CityMap() {
                 </div>
               </div>
               
+              {/* Map controls */}
+              <div className="absolute top-4 right-4 flex flex-col gap-2">
+                <Button 
+                  variant="secondary" 
+                  size="icon" 
+                  className="bg-background/80 backdrop-blur-sm"
+                  onClick={zoomIn}
+                >
+                  <ZoomIn className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  size="icon" 
+                  className="bg-background/80 backdrop-blur-sm"
+                  onClick={zoomOut}
+                >
+                  <ZoomOut className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  size="icon" 
+                  className="bg-background/80 backdrop-blur-sm"
+                  onClick={rotate}
+                >
+                  <RotateCw className="h-4 w-4" />
+                </Button>
+              </div>
+              
               <div className="absolute bottom-4 left-4 right-4 glass-card p-3 backdrop-blur-md inline-block">
                 <TabsContent value="traffic" className="m-0">
                   <div className="space-y-4">
@@ -143,28 +378,50 @@ export default function CityMap() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
-                        <Switch id="congestion" defaultChecked />
+                        <Switch 
+                          id="congestion" 
+                          checked={showTrafficLayers.congestion}
+                          onCheckedChange={() => handleTrafficLayerChange('congestion')}
+                        />
                         <Label htmlFor="congestion">Congestion</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="volume" defaultChecked />
+                        <Switch 
+                          id="volume" 
+                          checked={showTrafficLayers.volume}
+                          onCheckedChange={() => handleTrafficLayerChange('volume')}
+                        />
                         <Label htmlFor="volume">Volume</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="speed" defaultChecked />
+                        <Switch 
+                          id="speed" 
+                          checked={showTrafficLayers.speed}
+                          onCheckedChange={() => handleTrafficLayerChange('speed')}
+                        />
                         <Label htmlFor="speed">Speed</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="signals" />
+                        <Switch 
+                          id="signals" 
+                          checked={showTrafficLayers.signals}
+                          onCheckedChange={() => handleTrafficLayerChange('signals')}
+                        />
                         <Label htmlFor="signals">Signals</Label>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <Label htmlFor="time">Time Forecast (Minutes)</Label>
-                        <span className="text-xs text-muted-foreground">+30 min</span>
+                        <span className="text-xs text-muted-foreground">+{forecastTime} min</span>
                       </div>
-                      <Slider id="time" defaultValue={[30]} max={60} step={5} />
+                      <Slider 
+                        id="time" 
+                        value={[forecastTime]} 
+                        max={60} 
+                        step={5} 
+                        onValueChange={handleForecastTimeChange}
+                      />
                     </div>
                   </div>
                 </TabsContent>
@@ -177,19 +434,35 @@ export default function CityMap() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
-                        <Switch id="rain" />
+                        <Switch 
+                          id="rain" 
+                          checked={weatherLayers.rain}
+                          onCheckedChange={() => handleWeatherLayerChange('rain')}
+                        />
                         <Label htmlFor="rain">Precipitation</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="temp" />
+                        <Switch 
+                          id="temp" 
+                          checked={weatherLayers.temp}
+                          onCheckedChange={() => handleWeatherLayerChange('temp')}
+                        />
                         <Label htmlFor="temp">Temperature</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="wind" />
+                        <Switch 
+                          id="wind" 
+                          checked={weatherLayers.wind}
+                          onCheckedChange={() => handleWeatherLayerChange('wind')}
+                        />
                         <Label htmlFor="wind">Wind</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="visibility" />
+                        <Switch 
+                          id="visibility" 
+                          checked={weatherLayers.visibility}
+                          onCheckedChange={() => handleWeatherLayerChange('visibility')}
+                        />
                         <Label htmlFor="visibility">Visibility</Label>
                       </div>
                     </div>
@@ -204,19 +477,35 @@ export default function CityMap() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
-                        <Switch id="accidents" defaultChecked />
+                        <Switch 
+                          id="accidents" 
+                          checked={incidentLayers.accidents}
+                          onCheckedChange={() => handleIncidentLayerChange('accidents')}
+                        />
                         <Label htmlFor="accidents">Accidents</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="construction" defaultChecked />
+                        <Switch 
+                          id="construction" 
+                          checked={incidentLayers.construction}
+                          onCheckedChange={() => handleIncidentLayerChange('construction')}
+                        />
                         <Label htmlFor="construction">Construction</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="events" />
+                        <Switch 
+                          id="events" 
+                          checked={incidentLayers.events}
+                          onCheckedChange={() => handleIncidentLayerChange('events')}
+                        />
                         <Label htmlFor="events">Events</Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch id="closures" defaultChecked />
+                        <Switch 
+                          id="closures" 
+                          checked={incidentLayers.closures}
+                          onCheckedChange={() => handleIncidentLayerChange('closures')}
+                        />
                         <Label htmlFor="closures">Road Closures</Label>
                       </div>
                     </div>

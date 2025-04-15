@@ -1,11 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   Bell, 
   Search, 
   Calendar, 
-  SunMoon, 
+  Sun, 
+  Moon, 
   User 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,10 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
+
+// Define a theme type
+type Theme = "light" | "dark";
 
 interface HeaderProps {
   title: string;
@@ -31,6 +36,41 @@ export default function Header({ title, subtitle }: HeaderProps) {
     month: 'long',
     day: 'numeric'
   }));
+
+  const { toast } = useToast();
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Try to get the theme from localStorage on mount
+    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    return savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  });
+  
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications] = useState([
+    { id: 1, title: "Traffic Accident", message: "Major accident reported on Highway 101", time: "2 min ago" },
+    { id: 2, title: "Congestion Alert", message: "Heavy congestion detected in Downtown area", time: "15 min ago" },
+    { id: 3, title: "System Update", message: "New traffic analysis features available", time: "1 hour ago" }
+  ]);
+
+  // Set the theme on the document when it changes
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    toast({
+      title: `${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`,
+      description: `The interface has been switched to ${newTheme} mode.`,
+    });
+  };
+
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+  };
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border/40 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -59,15 +99,39 @@ export default function Header({ title, subtitle }: HeaderProps) {
       </div>
       
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
-            3
-          </span>
-        </Button>
+        <div className="relative">
+          <Button variant="ghost" size="icon" className="relative" onClick={handleNotificationClick}>
+            <Bell className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+              {notifications.length}
+            </span>
+          </Button>
+          
+          {showNotifications && (
+            <div className="absolute right-0 mt-2 w-80 bg-card rounded-md shadow-lg border border-border/40 z-50 overflow-hidden">
+              <div className="p-3 border-b border-border/40">
+                <h3 className="font-medium">Notifications</h3>
+              </div>
+              <div className="max-h-[350px] overflow-y-auto">
+                {notifications.map(notification => (
+                  <div key={notification.id} className="p-3 border-b border-border/40 hover:bg-muted/50 cursor-pointer">
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-medium text-sm">{notification.title}</h4>
+                      <span className="text-xs text-muted-foreground">{notification.time}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">{notification.message}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="p-2 flex justify-center border-t border-border/40">
+                <Button variant="ghost" size="sm" className="w-full">View All Notifications</Button>
+              </div>
+            </div>
+          )}
+        </div>
         
-        <Button variant="ghost" size="icon">
-          <SunMoon className="h-5 w-5" />
+        <Button variant="ghost" size="icon" onClick={toggleTheme}>
+          {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
         </Button>
         
         <DropdownMenu>
@@ -83,7 +147,12 @@ export default function Header({ title, subtitle }: HeaderProps) {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Help & Documentation</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Sign out</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => toast({
+              title: "Signed out",
+              description: "You have been logged out of your account.",
+            })}>
+              Sign out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

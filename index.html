@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,6 +16,57 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@traffic_ai" />
     <meta name="twitter:image" content="/assets/traffic-dashboard-preview.png" />
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      
+      /* CSS variables for traffic management theme */
+      .traffic-green {
+        color: #22c55e;
+      }
+      .traffic-yellow {
+        color: #f59e0b;
+      }
+      .traffic-red {
+        color: #ef4444;
+      }
+      
+      /* Animation for traffic flow */
+      @keyframes traffic-flow {
+        0% {
+          stroke-dashoffset: 0;
+        }
+        100% {
+          stroke-dashoffset: -50;
+        }
+      }
+      
+      .animate-traffic-flow {
+        animation: traffic-flow 2s linear infinite;
+      }
+      
+      .animate-pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      
+      /* Glass card effect */
+      .glass-card {
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(8px);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    </style>
   </head>
 
   <body>
@@ -23,4 +75,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -31,9 +31,12 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [alerts, setAlerts] = useState(3);
   
   const navigationItems = [
@@ -63,6 +66,36 @@ export function AppSidebar() {
       icon: Settings,
     },
   ];
+
+  const handleAlertsClick = () => {
+    if (alerts > 0) {
+      setAlerts(0);
+      toast({
+        title: "Alerts cleared",
+        description: "All notifications have been marked as read",
+      });
+    } else {
+      toast({
+        title: "No new alerts",
+        description: "You're all caught up!",
+      });
+    }
+  };
+
+  const handleAlertClick = () => {
+    navigate("/map");
+    toast({
+      title: "Incident located",
+      description: "The map has been centered on the incident location",
+    });
+  };
+
+  const handleSignOut = () => {
+    toast({
+      title: "Signed out",
+      description: "You have been logged out of your account.",
+    });
+  };
 
   return (
     <Sidebar>
@@ -116,7 +149,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton className="transition-colors hover:bg-sidebar-accent/50 group">
+                <SidebarMenuButton className="transition-colors hover:bg-sidebar-accent/50 group" onClick={handleAlertClick}>
                   <div className="flex items-center gap-3">
                     <AlertTriangle className="h-5 w-5 text-destructive group-hover:text-destructive" />
                     <span>Incidents</span>
@@ -125,7 +158,7 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="transition-colors hover:bg-sidebar-accent/50 group">
+                <SidebarMenuButton className="transition-colors hover:bg-sidebar-accent/50 group" onClick={handleAlertsClick}>
                   <div className="flex items-center gap-3">
                     <BellRing className="h-5 w-5 text-primary group-hover:text-primary" />
                     <span>Notifications</span>
@@ -147,7 +180,7 @@ export function AppSidebar() {
       </SidebarContent>
       
       <SidebarFooter className="border-t border-border/50 p-4">
-        <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+        <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={handleSignOut}>
           <LogOut className="h-4 w-4" />
           Sign Out
         </Button>
