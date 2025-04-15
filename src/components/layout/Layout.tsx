@@ -1,7 +1,8 @@
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { AppSidebar } from "./AppSidebar";
 import Header from "./Header";
+import { useTheme } from "@/context/ThemeContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,13 +11,7 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, title, subtitle }: LayoutProps) {
-  // Initialize theme from localStorage on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(savedTheme);
-  }, []);
+  const { theme } = useTheme();
 
   return (
     <div className="min-h-screen flex w-full">

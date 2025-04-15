@@ -5,8 +5,11 @@ import { TrafficControlPanel } from "@/components/traffic/TrafficControlPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { useTheme } from "@/context/ThemeContext";
 
 const MapView = () => {
+  const { theme } = useTheme();
+  
   return (
     <Layout
       title="3D Interactive Map"

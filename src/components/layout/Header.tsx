@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   Bell, 
@@ -20,9 +20,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-
-// Define a theme type
-type Theme = "light" | "dark";
+import { useTheme } from "@/context/ThemeContext";
 
 interface HeaderProps {
   title: string;
@@ -38,11 +36,7 @@ export default function Header({ title, subtitle }: HeaderProps) {
   }));
 
   const { toast } = useToast();
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Try to get the theme from localStorage on mount
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
-    return savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  });
+  const { theme, toggleTheme } = useTheme();
   
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications] = useState([
@@ -50,23 +44,6 @@ export default function Header({ title, subtitle }: HeaderProps) {
     { id: 2, title: "Congestion Alert", message: "Heavy congestion detected in Downtown area", time: "15 min ago" },
     { id: 3, title: "System Update", message: "New traffic analysis features available", time: "1 hour ago" }
   ]);
-
-  // Set the theme on the document when it changes
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    toast({
-      title: `${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`,
-      description: `The interface has been switched to ${newTheme} mode.`,
-    });
-  };
 
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
