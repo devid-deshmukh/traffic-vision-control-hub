@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -78,8 +77,6 @@ export function TrafficControlPanel() {
   const handleOptimizeTraffic = () => {
     toast("Traffic optimization in progress", {
       description: "AI analyzing patterns and adjusting signal timings",
-      // Change from "success" to "default" to match valid variant types
-      variant: "default",
     });
   };
 

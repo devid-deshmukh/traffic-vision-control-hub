@@ -1,7 +1,7 @@
 
 import Layout from "@/components/layout/Layout";
 import CityMap from "@/components/map/CityMap";
-import TrafficControlPanel from "@/components/traffic/TrafficControlPanel";
+import { TrafficControlPanel } from "@/components/traffic/TrafficControlPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
