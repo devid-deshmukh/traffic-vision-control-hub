@@ -1,334 +1,207 @@
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Lightbulb, AlertCircle, Gauge, RefreshCw } from "lucide-react";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "@/components/ui/sonner";
+import {
+  Activity,
+  AlertTriangle,
+  BarChart4,
+  Clock,
+  Pause,
+  Play,
+  RefreshCcw,
+  Settings,
+  Wand2,
+} from "lucide-react";
 
-export default function TrafficControlPanel() {
-  const { toast } = useToast();
-  const [trafficLightMode, setTrafficLightMode] = useState<"auto" | "manual">("auto");
-  const [congestionResponse, setCongestionResponse] = useState<"low" | "medium" | "high">("medium");
-  const [signalTiming, setSignalTiming] = useState({
-    downtown: 45,
-    highway: 30,
-    residential: 60
-  });
-  const [trafficPriority, setTrafficPriority] = useState("north-south");
-  const [responseActions, setResponseActions] = useState({
-    reroute: false,
-    emergency: true,
-    variable: false,
-    messaging: true
-  });
-  
-  const handleModeChange = (checked: boolean) => {
-    const newMode = checked ? "manual" : "auto";
-    setTrafficLightMode(newMode);
-    toast({
-      title: `${newMode.charAt(0).toUpperCase() + newMode.slice(1)} mode activated`,
-      description: `Traffic signals are now in ${newMode} control mode.`,
+export function TrafficControlPanel() {
+  const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+  const [simulationSpeed, setSimulationSpeed] = useState(1);
+  const [optimizationLevel, setOptimizationLevel] = useState(70);
+  const [autonomousMode, setAutonomousMode] = useState(false);
+  const [emergencyOverride, setEmergencyOverride] = useState(false);
+
+  const handleSimulationToggle = () => {
+    setIsSimulationRunning(!isSimulationRunning);
+    toast(
+      !isSimulationRunning
+        ? "Traffic simulation started"
+        : "Traffic simulation paused",
+      {
+        description: !isSimulationRunning
+          ? "Real-time data streaming activated"
+          : "Simulation state preserved",
+      }
+    );
+  };
+
+  const handleResetSimulation = () => {
+    setIsSimulationRunning(false);
+    setSimulationSpeed(1);
+    toast("Simulation reset", {
+      description: "All parameters restored to default values",
     });
   };
 
-  const handleSignalTimingChange = (key: keyof typeof signalTiming, value: number[]) => {
-    setSignalTiming(prev => ({ ...prev, [key]: value[0] }));
+  const handleAutonomousToggle = () => {
+    setAutonomousMode(!autonomousMode);
+    toast(
+      !autonomousMode
+        ? "AI Traffic Management activated"
+        : "Manual control mode activated",
+      {
+        description: !autonomousMode
+          ? "System will automatically optimize traffic flow"
+          : "Manual control enabled for traffic signals",
+      }
+    );
   };
 
-  const handleResetTiming = () => {
-    setSignalTiming({
-      downtown: 45,
-      highway: 30,
-      residential: 60
-    });
-    toast({
-      title: "Signal timing reset",
-      description: "Traffic signal timing has been reset to default values.",
-    });
+  const handleEmergencyToggle = () => {
+    setEmergencyOverride(!emergencyOverride);
+    toast(
+      !emergencyOverride
+        ? "Emergency protocol activated"
+        : "Normal operations resumed",
+      {
+        description: !emergencyOverride
+          ? "All signals prioritizing emergency vehicle routes"
+          : "Standard traffic patterns restored",
+      }
+    );
   };
 
-  const handleApplyChanges = () => {
-    toast({
-      title: "Changes applied",
-      description: "Traffic signal timing changes have been applied to the network.",
-    });
-  };
-
-  const handlePriorityChange = (priority: string) => {
-    setTrafficPriority(priority);
-    toast({
-      title: "Traffic priority changed",
-      description: `Priority has been given to ${priority} traffic flow.`,
-    });
-  };
-
-  const handleResponseLevelChange = (level: "low" | "medium" | "high") => {
-    setCongestionResponse(level);
-    toast({
-      title: "Response level updated",
-      description: `Traffic response level set to ${level}.`,
-    });
-  };
-
-  const handleActionToggle = (action: keyof typeof responseActions) => {
-    setResponseActions(prev => {
-      const newValue = !prev[action];
-      toast({
-        title: newValue ? `${action.charAt(0).toUpperCase() + action.slice(1)} activated` : `${action.charAt(0).toUpperCase() + action.slice(1)} deactivated`,
-        description: newValue ? `${action} response has been enabled.` : `${action} response has been disabled.`,
-      });
-      return { ...prev, [action]: newValue };
-    });
-  };
-
-  const deployResponsePlan = () => {
-    toast({
-      title: "Response plan deployed",
-      description: "Traffic management plan has been deployed to all affected areas.",
-      variant: "success"
+  const handleOptimizeTraffic = () => {
+    toast("Traffic optimization in progress", {
+      description: "AI analyzing patterns and adjusting signal timings",
+      // Change from "success" to "default" to match valid variant types
+      variant: "default",
     });
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full overflow-auto">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Gauge className="h-5 w-5 text-primary" />
-          Traffic Control Center
+        <CardTitle className="flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            Traffic Control Center
+          </span>
+          <Badge
+            variant={isSimulationRunning ? "default" : "secondary"}
+            className="ml-2"
+          >
+            {isSimulationRunning ? "ACTIVE" : "STANDBY"}
+          </Badge>
         </CardTitle>
-        <CardDescription>
-          Monitor and optimize traffic flow in real-time
-        </CardDescription>
       </CardHeader>
-      <CardContent className="pb-2">
-        <Tabs defaultValue="signals" className="space-y-4">
-          <TabsList className="grid grid-cols-2">
-            <TabsTrigger value="signals">Traffic Signals</TabsTrigger>
-            <TabsTrigger value="response">Response Actions</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="signals" className="space-y-4">
-            <div className="space-y-2">
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium flex items-center gap-1.5">
+              <Activity className="h-4 w-4" /> Simulation Control
+            </h3>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleResetSimulation}
+            >
+              <RefreshCcw className="mr-1 h-3.5 w-3.5" />
+              Reset
+            </Button>
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <Button
+              onClick={handleSimulationToggle}
+              variant={isSimulationRunning ? "default" : "secondary"}
+              className="w-full"
+            >
+              {isSimulationRunning ? (
+                <>
+                  <Pause className="mr-1.5 h-4 w-4" /> Pause
+                </>
+              ) : (
+                <>
+                  <Play className="mr-1.5 h-4 w-4" /> Start
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium flex items-center gap-1.5">
+            <Clock className="h-4 w-4" /> Simulation Speed
+          </h3>
+          <div className="flex items-center gap-2">
+            <Slider
+              value={[simulationSpeed]}
+              min={0.5}
+              max={5}
+              step={0.5}
+              onValueChange={(values) => setSimulationSpeed(values[0])}
+              disabled={!isSimulationRunning}
+            />
+            <span className="w-10 text-sm font-medium">
+              {simulationSpeed}x
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium flex items-center gap-1.5">
+            <BarChart4 className="h-4 w-4" /> Traffic Optimization
+          </h3>
+          <div className="grid gap-4">
+            <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-primary" />
-                  Signal Control Mode
-                </Label>
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs ${trafficLightMode === "auto" ? "text-primary" : "text-muted-foreground"}`}>Auto</span>
-                  <Switch 
-                    checked={trafficLightMode === "manual"} 
-                    onCheckedChange={handleModeChange}
-                  />
-                  <span className={`text-xs ${trafficLightMode === "manual" ? "text-primary" : "text-muted-foreground"}`}>Manual</span>
-                </div>
+                <span className="text-sm text-muted-foreground">Level</span>
+                <span className="text-sm font-medium">{optimizationLevel}%</span>
               </div>
-              
-              <Card className="border border-border/40">
-                <CardContent className="p-3 space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="downtown-timing" className="text-xs flex items-center justify-between">
-                      Downtown Corridor Timing
-                      <span className="text-primary text-xs font-mono">{signalTiming.downtown}s</span>
-                    </Label>
-                    <Slider 
-                      id="downtown-timing" 
-                      value={[signalTiming.downtown]} 
-                      max={120} 
-                      step={5} 
-                      disabled={trafficLightMode === "auto"}
-                      onValueChange={(value) => handleSignalTimingChange('downtown', value)}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="highway-timing" className="text-xs flex items-center justify-between">
-                      Highway Exit Timing
-                      <span className="text-primary text-xs font-mono">{signalTiming.highway}s</span>
-                    </Label>
-                    <Slider 
-                      id="highway-timing" 
-                      value={[signalTiming.highway]} 
-                      max={120} 
-                      step={5} 
-                      disabled={trafficLightMode === "auto"}
-                      onValueChange={(value) => handleSignalTimingChange('highway', value)}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="residential-timing" className="text-xs flex items-center justify-between">
-                      Residential Area Timing
-                      <span className="text-primary text-xs font-mono">{signalTiming.residential}s</span>
-                    </Label>
-                    <Slider 
-                      id="residential-timing" 
-                      value={[signalTiming.residential]} 
-                      max={120} 
-                      step={5} 
-                      disabled={trafficLightMode === "auto"}
-                      onValueChange={(value) => handleSignalTimingChange('residential', value)}
-                    />
-                  </div>
-                </CardContent>
-                
-                <CardFooter className="px-3 py-2 border-t border-border/40 flex justify-between">
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className="gap-1" 
-                    disabled={trafficLightMode === "auto"}
-                    onClick={handleResetTiming}
-                  >
-                    <RefreshCw className="h-3.5 w-3.5" />
-                    Reset
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    disabled={trafficLightMode === "auto"}
-                    onClick={handleApplyChanges}
-                  >
-                    Apply Changes
-                  </Button>
-                </CardFooter>
-              </Card>
+              <Slider
+                value={[optimizationLevel]}
+                min={0}
+                max={100}
+                step={5}
+                onValueChange={(values) => setOptimizationLevel(values[0])}
+              />
             </div>
-            
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Traffic Flow Priority</Label>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <Button 
-                  variant="outline" 
-                  className={`h-auto py-2 justify-start gap-2 ${trafficPriority === "north-south" ? "border-green-500/20 bg-green-500/10" : "border-green-500/20 hover:bg-green-500/10"}`}
-                  onClick={() => handlePriorityChange("north-south")}
-                >
-                  <div className="h-3 w-3 rounded-full bg-traffic-green"></div>
-                  North-South
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className={`h-auto py-2 justify-start gap-2 ${trafficPriority === "east-west" ? "border-primary/20 bg-primary/10" : "border-primary/20 hover:bg-primary/10"}`}
-                  onClick={() => handlePriorityChange("east-west")}
-                >
-                  <div className="h-3 w-3 rounded-full bg-primary"></div>
-                  East-West
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className={`h-auto py-2 justify-start gap-2 ${trafficPriority === "transit" ? "border-yellow-500/20 bg-yellow-500/10" : "border-yellow-500/20 hover:bg-yellow-500/10"}`}
-                  onClick={() => handlePriorityChange("transit")}
-                >
-                  <div className="h-3 w-3 rounded-full bg-traffic-yellow"></div>
-                  Public Transit
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className={`h-auto py-2 justify-start gap-2 ${trafficPriority === "emergency" ? "border-red-500/20 bg-red-500/10" : "border-red-500/20 hover:bg-red-500/10"}`}
-                  onClick={() => handlePriorityChange("emergency")}
-                >
-                  <div className="h-3 w-3 rounded-full bg-traffic-red"></div>
-                  Emergency Routes
-                </Button>
+            <Button onClick={handleOptimizeTraffic} className="w-full">
+              <Wand2 className="mr-1.5 h-4 w-4" /> Optimize Now
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium">System Controls</h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={autonomousMode}
+                  onCheckedChange={handleAutonomousToggle}
+                />
+                <span className="text-sm">AI Autonomous Control</span>
               </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="response" className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-destructive" />
-                Congestion Response Level
-              </Label>
-              
-              <div className="grid grid-cols-3 gap-2">
-                <Button 
-                  variant={congestionResponse === "low" ? "default" : "outline"} 
-                  size="sm"
-                  onClick={() => handleResponseLevelChange("low")}
-                  className={congestionResponse === "low" ? "" : "border-green-500/20 text-green-500 hover:text-green-500 hover:bg-green-500/10"}
-                >
-                  Low
-                </Button>
-                <Button 
-                  variant={congestionResponse === "medium" ? "default" : "outline"} 
-                  size="sm"
-                  onClick={() => handleResponseLevelChange("medium")}
-                  className={congestionResponse === "medium" ? "" : "border-yellow-500/20 text-yellow-500 hover:text-yellow-500 hover:bg-yellow-500/10"}
-                >
-                  Medium
-                </Button>
-                <Button 
-                  variant={congestionResponse === "high" ? "default" : "outline"} 
-                  size="sm"
-                  onClick={() => handleResponseLevelChange("high")}
-                  className={congestionResponse === "high" ? "" : "border-red-500/20 text-red-500 hover:text-red-500 hover:bg-red-500/10"}
-                >
-                  High
-                </Button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={emergencyOverride}
+                  onCheckedChange={handleEmergencyToggle}
+                />
+                <div className="flex items-center gap-1.5">
+                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                  <span className="text-sm">Emergency Override</span>
+                </div>
               </div>
             </div>
-            
-            <Card className="border border-border/40">
-              <CardHeader className="p-3 pb-2">
-                <CardTitle className="text-sm">Response Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="p-3 pt-0 space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="reroute" className="text-xs flex items-center gap-1.5">
-                    Activate Detour Routes
-                  </Label>
-                  <Switch 
-                    id="reroute" 
-                    checked={responseActions.reroute}
-                    onCheckedChange={() => handleActionToggle('reroute')}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="emergency" className="text-xs flex items-center gap-1.5">
-                    Emergency Vehicle Priority
-                  </Label>
-                  <Switch 
-                    id="emergency" 
-                    checked={responseActions.emergency}
-                    onCheckedChange={() => handleActionToggle('emergency')}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="variable" className="text-xs flex items-center gap-1.5">
-                    Variable Speed Limits
-                  </Label>
-                  <Switch 
-                    id="variable" 
-                    checked={responseActions.variable}
-                    onCheckedChange={() => handleActionToggle('variable')}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="messaging" className="text-xs flex items-center gap-1.5">
-                    Dynamic Message Signs
-                  </Label>
-                  <Switch 
-                    id="messaging" 
-                    checked={responseActions.messaging}
-                    onCheckedChange={() => handleActionToggle('messaging')}
-                  />
-                </div>
-              </CardContent>
-              
-              <CardFooter className="px-3 py-2 border-t border-border/40">
-                <Button size="sm" className="w-full" onClick={deployResponsePlan}>Deploy Response Plan</Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
