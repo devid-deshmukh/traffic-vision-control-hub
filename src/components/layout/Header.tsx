@@ -49,8 +49,16 @@ export default function Header({ title, subtitle }: HeaderProps) {
     setShowNotifications(!showNotifications);
   };
 
+  const handleThemeToggle = () => {
+    toggleTheme();
+    toast({
+      title: `${theme === 'light' ? 'Dark' : 'Light'} mode enabled`,
+      description: `The interface has been switched to ${theme === 'light' ? 'dark' : 'light'} mode.`,
+    });
+  };
+
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border/40 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border/40 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">
       <div className="flex items-center gap-3">
         <SidebarTrigger className="lg:hidden" />
         <div>
@@ -107,8 +115,16 @@ export default function Header({ title, subtitle }: HeaderProps) {
           )}
         </div>
         
-        <Button variant="ghost" size="icon" onClick={toggleTheme}>
-          {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={handleThemeToggle}
+          className="hover:bg-muted"
+        >
+          {theme === "light" ? 
+            <Moon className="h-5 w-5 text-foreground" /> : 
+            <Sun className="h-5 w-5 text-foreground" />
+          }
         </Button>
         
         <DropdownMenu>

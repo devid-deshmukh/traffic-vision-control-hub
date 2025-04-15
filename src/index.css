@@ -1,51 +1,58 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Light mode colors */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    /* Light mode colors - updated as per request */
+    --background: 0 0% 98%;  /* #F9FAFB */
+    --foreground: 222 47% 11%;  /* #111827 */
 
-    --card: 0 0% 98%;
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%;  /* #FFFFFF */
+    --card-foreground: 222 47% 11%;  /* #111827 */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;  /* #FFFFFF */
+    --popover-foreground: 222 47% 11%;  /* #111827 */
 
-    --primary: 252 94% 67%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 217 91% 53%;  /* #2563EB */
+    --primary-foreground: 0 0% 100%;  /* #FFFFFF */
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 142 72% 45%;  /* #22C55E */
+    --secondary-foreground: 222 47% 11%;  /* #111827 */
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 25% 40%;
+    --muted: 220 14% 96%;  /* #F1F5F9 */
+    --muted-foreground: 220 9% 46%;  /* #6B7280 */
 
-    --accent: 252 94% 67%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 217 91% 53%;  /* #2563EB */
+    --accent-foreground: 0 0% 100%;  /* #FFFFFF */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;  /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;  /* #FFFFFF */
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 224 76% 48%;
+    --border: 220 13% 91%;  /* #E5E7EB */
+    --input: 220 13% 91%;  /* #E5E7EB */
+    --ring: 217 91% 53%;  /* #2563EB */
     
     --radius: 0.75rem;
 
-    --sidebar-background: 210 40% 96%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 252 94% 67%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 224 76% 48%;
+    /* Traffic colors for heatmap */
+    --traffic-green: 142 72% 45%;  /* #22C55E - smooth traffic */
+    --traffic-yellow: 47 96% 53%;  /* #FACC15 - moderate congestion */
+    --traffic-red: 0 84% 60%;  /* #EF4444 - severe congestion */
+
+    --sidebar-background: 220 14% 96%;  /* #F1F5F9 */
+    --sidebar-foreground: 222 47% 11%;  /* #111827 */
+    --sidebar-primary: 217 91% 53%;  /* #2563EB */
+    --sidebar-primary-foreground: 0 0% 100%;  /* #FFFFFF */
+    --sidebar-accent: 220 14% 96%;  /* #F1F5F9 */
+    --sidebar-accent-foreground: 222 47% 11%;  /* #111827 */
+    --sidebar-border: 220 13% 91%;  /* #E5E7EB */
+    --sidebar-ring: 217 91% 53%;  /* #2563EB */
   }
 
   .dark {
+    /* Keep existing dark mode colors */
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
 
@@ -76,6 +83,11 @@
     
     --radius: 0.75rem;
 
+    /* Traffic colors for heatmap */
+    --traffic-green: 142 72% 45%;  /* #22C55E */
+    --traffic-yellow: 47 96% 53%;  /* #FACC15 */
+    --traffic-red: 0 84% 60%;  /* #EF4444 */
+
     --sidebar-background: 225 32% 10%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 252 94% 67%;
@@ -103,17 +115,22 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-secondary/50 rounded-full;
+    @apply bg-secondary/10 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb {
     @apply bg-primary/70 hover:bg-primary rounded-full;
   }
+
+  /* Add smooth transitions for all interactive elements */
+  button, a, input, select, .hover-effect {
+    @apply transition-all duration-300;
+  }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-secondary/70 backdrop-blur-sm border border-primary/10 rounded-lg;
+    @apply bg-secondary/5 backdrop-blur-sm border border-border/80 rounded-lg shadow-sm;
   }
   
   .data-point {

@@ -12,9 +12,9 @@ interface LayoutProps {
 
 export default function Layout({ children, title, subtitle }: LayoutProps) {
   const { theme } = useTheme();
-
+  
   return (
-    <div className="min-h-screen flex w-full">
+    <div className={`min-h-screen flex w-full transition-colors duration-300 ${theme === "light" ? "bg-background" : ""}`}>
       <AppSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title={title} subtitle={subtitle} />

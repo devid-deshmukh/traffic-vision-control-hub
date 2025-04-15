@@ -2,13 +2,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Layers, Map as MapIcon, Activity, CloudRain, AlertTriangle, ZoomIn, ZoomOut, RotateCw } from 'lucide-react';
+import { Layers, Map as MapIcon, Activity, AlertTriangle, ZoomIn, ZoomOut, RotateCw, RotateCcw, Maximize, MinusCircle, PlusCircle } from 'lucide-react';
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useTheme } from "@/context/ThemeContext";
 
 // This is a placeholder for the 3D map - in a real app, you'd use something like MapBox, Google Maps, or Three.js
 export default function CityMap() {
@@ -28,12 +29,6 @@ export default function CityMap() {
     speed: true,
     signals: false
   });
-  const [weatherLayers, setWeatherLayers] = useState({
-    rain: false,
-    temp: false,
-    wind: false,
-    visibility: false
-  });
   const [incidentLayers, setIncidentLayers] = useState({
     accidents: true,
     construction: true,
@@ -42,6 +37,7 @@ export default function CityMap() {
   });
   const [forecastTime, setForecastTime] = useState(30);
   const { toast } = useToast();
+  const { theme } = useTheme();
 
   useEffect(() => {
     // Simulate map loading
@@ -49,7 +45,7 @@ export default function CityMap() {
       setIsLoading(false);
       toast({
         title: "Map loaded",
-        description: "3D traffic map is now ready to use.",
+        description: "Traffic map is now ready to use.",
       });
     }, 1500);
 
@@ -59,18 +55,49 @@ export default function CityMap() {
   // Functions for map interactions
   const zoomIn = () => {
     if (zoom < 3) {
-      setZoom(prev => prev + 0.2);
+      setZoom(prev => Math.min(prev + 0.2, 3));
+      toast({
+        title: "Zoomed in",
+        description: "Map zoom level increased.",
+        duration: 1500,
+      });
     }
   };
 
   const zoomOut = () => {
     if (zoom > 0.5) {
-      setZoom(prev => prev - 0.2);
+      setZoom(prev => Math.max(prev - 0.2, 0.5));
+      toast({
+        title: "Zoomed out",
+        description: "Map zoom level decreased.",
+        duration: 1500,
+      });
     }
   };
 
-  const rotate = () => {
-    setRotation(prev => (prev + 45) % 360);
+  const rotate = (direction: 'clockwise' | 'counterclockwise') => {
+    if (direction === 'clockwise') {
+      setRotation(prev => (prev + 45) % 360);
+    } else {
+      setRotation(prev => (prev - 45 + 360) % 360);
+    }
+    
+    toast({
+      title: "Map rotated",
+      description: `Rotated ${direction === 'clockwise' ? 'clockwise' : 'counterclockwise'} by 45°`,
+      duration: 1500,
+    });
+  };
+
+  const resetMapView = () => {
+    setZoom(1);
+    setRotation(0);
+    setMapPosition({ x: 0, y: 0 });
+    toast({
+      title: "View reset",
+      description: "Map view has been reset to default.",
+      duration: 1500,
+    });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -94,6 +121,19 @@ export default function CityMap() {
   };
 
   const handleMouseUp = () => {
+    if (mouseDown && !isDragging) {
+      // Handle map click/tap
+      const randomLocation = {
+        name: ["Downtown Junction", "North Heights", "Riverside Avenue", "Tech Park", "Central Station"][Math.floor(Math.random() * 5)],
+        status: ["Heavy traffic", "Moderate flow", "Light traffic", "Clear", "Accident reported"][Math.floor(Math.random() * 5)]
+      };
+      
+      toast({
+        title: `Selected: ${randomLocation.name}`,
+        description: `Status: ${randomLocation.status}`,
+      });
+    }
+    
     setMouseDown(false);
     setTimeout(() => setIsDragging(false), 100);
   };
@@ -104,17 +144,7 @@ export default function CityMap() {
       toast({
         title: newState[id] ? `${id.charAt(0).toUpperCase() + id.slice(1)} layer enabled` : `${id.charAt(0).toUpperCase() + id.slice(1)} layer disabled`,
         description: newState[id] ? `Showing ${id} data on the map.` : `Hidden ${id} data from the map.`,
-      });
-      return newState;
-    });
-  };
-
-  const handleWeatherLayerChange = (id: keyof typeof weatherLayers) => {
-    setWeatherLayers(prev => {
-      const newState = { ...prev, [id]: !prev[id] };
-      toast({
-        title: newState[id] ? `${id.charAt(0).toUpperCase() + id.slice(1)} layer enabled` : `${id.charAt(0).toUpperCase() + id.slice(1)} layer disabled`,
-        description: newState[id] ? `Showing ${id} data on the map.` : `Hidden ${id} data from the map.`,
+        duration: 2000,
       });
       return newState;
     });
@@ -126,6 +156,7 @@ export default function CityMap() {
       toast({
         title: newState[id] ? `${id.charAt(0).toUpperCase() + id.slice(1)} layer enabled` : `${id.charAt(0).toUpperCase() + id.slice(1)} layer disabled`,
         description: newState[id] ? `Showing ${id} data on the map.` : `Hidden ${id} data from the map.`,
+        duration: 2000,
       });
       return newState;
     });
@@ -136,11 +167,27 @@ export default function CityMap() {
     toast({
       title: "Forecast time updated",
       description: `Showing traffic prediction for +${value[0]} minutes.`,
+      duration: 2000,
     });
   };
 
+  const handleMapModeChange = (value: "2d" | "3d") => {
+    if (value) {
+      setMapMode(value);
+      toast({
+        title: `${value.toUpperCase()} Mode Activated`,
+        description: value === "3d" ? "Showing 3D traffic visualization" : "Showing 2D traffic map view",
+      });
+      
+      // Reset view on mode change
+      setZoom(1);
+      setRotation(0);
+      setMapPosition({ x: 0, y: 0 });
+    }
+  };
+
   return (
-    <Card className="h-full overflow-hidden relative">
+    <Card className="h-full overflow-hidden relative border-border/80 shadow-md">
       <Tabs 
         defaultValue="traffic" 
         className="h-full flex flex-col"
@@ -150,18 +197,18 @@ export default function CityMap() {
         <div className="flex items-center justify-between px-4 py-2 border-b">
           <div className="flex items-center gap-2">
             <MapIcon className="h-5 w-5 text-primary" />
-            <h3 className="font-medium">3D City Map</h3>
+            <h3 className="font-medium">{mapMode === "3d" ? "3D City Map" : "2D Traffic Map"}</h3>
           </div>
           <div className="flex items-center gap-2">
             <ToggleGroup type="single" value={mapMode} onValueChange={(value) => {
-              if (value) setMapMode(value as "2d" | "3d");
+              if (value) handleMapModeChange(value as "2d" | "3d");
             }}>
-              <ToggleGroupItem value="2d" size="sm">2D</ToggleGroupItem>
-              <ToggleGroupItem value="3d" size="sm">3D</ToggleGroupItem>
+              <ToggleGroupItem value="2d" size="sm" className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">2D</ToggleGroupItem>
+              <ToggleGroupItem value="3d" size="sm" className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">3D</ToggleGroupItem>
             </ToggleGroup>
             <TabsList>
               <TabsTrigger value="traffic">Traffic</TabsTrigger>
-              <TabsTrigger value="weather">Weather</TabsTrigger>
+              {mapMode === "2d" && <TabsTrigger value="weather">Weather</TabsTrigger>}
               <TabsTrigger value="incidents">Incidents</TabsTrigger>
             </TabsList>
           </div>
@@ -176,7 +223,7 @@ export default function CityMap() {
             <>
               <div 
                 ref={mapContainerRef}
-                className="h-full w-full bg-gradient-to-br from-gray-900 to-gray-800 relative"
+                className={`h-full w-full relative ${mapMode === "3d" ? "bg-gradient-to-br from-gray-900 to-gray-800" : "bg-[#F1F5F9]"}`}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -187,7 +234,7 @@ export default function CityMap() {
                   cursor: mouseDown ? 'grabbing' : 'grab'
                 }}
               >
-                {/* Simplified placeholder map with traffic visualization */}
+                {/* Placeholder map with traffic visualization */}
                 <div className="w-full h-full relative overflow-hidden" style={{ 
                   transform: `translate(${mapPosition.x}%, ${mapPosition.y}%)`,
                 }}>
@@ -195,7 +242,7 @@ export default function CityMap() {
                   <svg className="absolute inset-0 w-full h-full opacity-40" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#6366f1" strokeWidth="0.5" />
+                        <path d="M 100 0 L 0 0 0 100" fill="none" stroke={theme === "light" ? "#94A3B8" : "#6366f1"} strokeWidth="0.5" />
                       </pattern>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#grid)" />
@@ -206,8 +253,8 @@ export default function CityMap() {
                     {/* Horizontal main road with heavy traffic (red) */}
                     <path 
                       d="M 0,250 L 1000,250" 
-                      stroke={showTrafficLayers.congestion ? "#ef4444" : "#999999"} 
-                      strokeWidth="8"
+                      stroke={showTrafficLayers.congestion ? "hsl(var(--traffic-red))" : "#999999"} 
+                      strokeWidth={mapMode === "3d" ? "8" : "12"}
                       strokeLinecap="round"
                       style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
@@ -215,8 +262,8 @@ export default function CityMap() {
                     {/* Vertical main road with moderate traffic (yellow) */}
                     <path 
                       d="M 500,0 L 500,600" 
-                      stroke={showTrafficLayers.congestion ? "#f59e0b" : "#999999"} 
-                      strokeWidth="8"
+                      stroke={showTrafficLayers.congestion ? "hsl(var(--traffic-yellow))" : "#999999"} 
+                      strokeWidth={mapMode === "3d" ? "8" : "12"}
                       strokeLinecap="round"
                       style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
@@ -224,29 +271,29 @@ export default function CityMap() {
                     {/* Secondary roads with free-flowing traffic (green) */}
                     <path 
                       d="M 200,0 L 200,600" 
-                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
-                      strokeWidth="5"
+                      stroke={showTrafficLayers.congestion ? "hsl(var(--traffic-green))" : "#999999"} 
+                      strokeWidth={mapMode === "3d" ? "5" : "8"}
                       strokeLinecap="round"
                       style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     <path 
                       d="M 800,0 L 800,600" 
-                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
-                      strokeWidth="5"
+                      stroke={showTrafficLayers.congestion ? "hsl(var(--traffic-green))" : "#999999"} 
+                      strokeWidth={mapMode === "3d" ? "5" : "8"}
                       strokeLinecap="round"
                       style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     <path 
                       d="M 0,400 L 1000,400" 
-                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
-                      strokeWidth="5"
+                      stroke={showTrafficLayers.congestion ? "hsl(var(--traffic-green))" : "#999999"} 
+                      strokeWidth={mapMode === "3d" ? "5" : "8"}
                       strokeLinecap="round"
                       style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
                     <path 
                       d="M 0,100 L 1000,100" 
-                      stroke={showTrafficLayers.congestion ? "#22c55e" : "#999999"} 
-                      strokeWidth="5"
+                      stroke={showTrafficLayers.congestion ? "hsl(var(--traffic-green))" : "#999999"} 
+                      strokeWidth={mapMode === "3d" ? "5" : "8"}
                       strokeLinecap="round"
                       style={{ display: showTrafficLayers.congestion || showTrafficLayers.volume ? "block" : "none" }}
                     />
@@ -277,7 +324,7 @@ export default function CityMap() {
                           description: "Major collision at Downtown Intersection, 2 vehicles involved.",
                         });
                       }}>
-                        <circle cx="500" cy="250" r="15" fill="#ef4444" className="animate-pulse-slow" />
+                        <circle cx="500" cy="250" r="15" fill="hsl(var(--traffic-red))" className="animate-pulse-slow" />
                         <text x="500" y="255" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">!</text>
                       </g>
                     )}
@@ -289,17 +336,17 @@ export default function CityMap() {
                           description: "Road work on Northern Avenue, expected completion in 3 days.",
                         });
                       }}>
-                        <circle cx="200" cy="400" r="15" fill="#f59e0b" className="animate-pulse-slow" />
+                        <circle cx="200" cy="400" r="15" fill="hsl(var(--traffic-yellow))" className="animate-pulse-slow" />
                         <text x="200" y="405" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">C</text>
                       </g>
                     )}
                     
-                    {weatherLayers.rain && (
+                    {selectedTab === "weather" && mapMode === "2d" && (
                       <>
-                        {/* Simple weather overlay */}
-                        <rect x="0" y="0" width="100%" height="100%" fill="rgba(0, 0, 255, 0.1)" />
+                        {/* Simple weather overlay for 2D mode only */}
+                        <rect x="0" y="0" width="100%" height="100%" fill="rgba(0, 0, 255, 0.05)" />
                         {/* Rain drops */}
-                        {Array.from({ length: 50 }).map((_, i) => (
+                        {Array.from({ length: 30 }).map((_, i) => (
                           <line 
                             key={i}
                             x1={Math.random() * 1000} 
@@ -331,13 +378,26 @@ export default function CityMap() {
                     </div>
                   )}
                   
-                  {/* Buildings */}
-                  <div className="absolute left-[420px] top-[160px] w-20 h-40 bg-blue-900/80 rounded"></div>
-                  <div className="absolute left-[460px] top-[170px] w-15 h-30 bg-blue-800/80 rounded"></div>
-                  <div className="absolute left-[380px] top-[170px] w-25 h-25 bg-blue-700/80 rounded"></div>
-                  <div className="absolute left-[440px] top-[300px] w-30 h-60 bg-blue-900/80 rounded"></div>
-                  <div className="absolute left-[540px] top-[300px] w-25 h-50 bg-blue-800/80 rounded"></div>
-                  <div className="absolute left-[340px] top-[300px] w-40 h-30 bg-blue-700/80 rounded"></div>
+                  {/* Buildings - only show in 3D mode */}
+                  {mapMode === "3d" && (
+                    <>
+                      <div className="absolute left-[420px] top-[160px] w-20 h-40 bg-blue-900/80 rounded"></div>
+                      <div className="absolute left-[460px] top-[170px] w-15 h-30 bg-blue-800/80 rounded"></div>
+                      <div className="absolute left-[380px] top-[170px] w-25 h-25 bg-blue-700/80 rounded"></div>
+                      <div className="absolute left-[440px] top-[300px] w-30 h-60 bg-blue-900/80 rounded"></div>
+                      <div className="absolute left-[540px] top-[300px] w-25 h-50 bg-blue-800/80 rounded"></div>
+                      <div className="absolute left-[340px] top-[300px] w-40 h-30 bg-blue-700/80 rounded"></div>
+                    </>
+                  )}
+                  
+                  {/* 2D specific elements */}
+                  {mapMode === "2d" && (
+                    <>
+                      <div className="absolute left-[420px] top-[160px] w-20 h-30 bg-blue-500/20 border border-blue-500 rounded"></div>
+                      <div className="absolute left-[460px] top-[170px] w-15 h-20 bg-blue-500/20 border border-blue-500 rounded"></div>
+                      <div className="absolute left-[380px] top-[170px] w-25 h-25 bg-blue-500/20 border border-blue-500 rounded"></div>
+                    </>
+                  )}
                 </div>
               </div>
               
@@ -346,26 +406,51 @@ export default function CityMap() {
                 <Button 
                   variant="secondary" 
                   size="icon" 
-                  className="bg-background/80 backdrop-blur-sm"
+                  className="bg-background/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground"
                   onClick={zoomIn}
+                  title="Zoom In"
                 >
                   <ZoomIn className="h-4 w-4" />
                 </Button>
                 <Button 
                   variant="secondary" 
                   size="icon" 
-                  className="bg-background/80 backdrop-blur-sm"
+                  className="bg-background/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground"
                   onClick={zoomOut}
+                  title="Zoom Out"
                 >
                   <ZoomOut className="h-4 w-4" />
                 </Button>
+                {mapMode === "3d" && (
+                  <>
+                    <Button 
+                      variant="secondary" 
+                      size="icon" 
+                      className="bg-background/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => rotate('clockwise')}
+                      title="Rotate Clockwise"
+                    >
+                      <RotateCw className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="secondary" 
+                      size="icon" 
+                      className="bg-background/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => rotate('counterclockwise')}
+                      title="Rotate Counter-clockwise"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
                 <Button 
                   variant="secondary" 
                   size="icon" 
-                  className="bg-background/80 backdrop-blur-sm"
-                  onClick={rotate}
+                  className="bg-background/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground"
+                  onClick={resetMapView}
+                  title="Reset View"
                 >
-                  <RotateCw className="h-4 w-4" />
+                  <Maximize className="h-4 w-4" />
                 </Button>
               </div>
               
@@ -421,6 +506,7 @@ export default function CityMap() {
                         max={60} 
                         step={5} 
                         onValueChange={handleForecastTimeChange}
+                        className="[&>[role=slider]]:bg-primary"
                       />
                     </div>
                   </div>
@@ -430,40 +516,12 @@ export default function CityMap() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-medium">Weather Conditions</h4>
-                      <CloudRain className="h-4 w-4 text-muted-foreground" />
+                      <div className="text-sm text-muted-foreground">Available in 2D mode only</div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-center gap-2">
-                        <Switch 
-                          id="rain" 
-                          checked={weatherLayers.rain}
-                          onCheckedChange={() => handleWeatherLayerChange('rain')}
-                        />
-                        <Label htmlFor="rain">Precipitation</Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Switch 
-                          id="temp" 
-                          checked={weatherLayers.temp}
-                          onCheckedChange={() => handleWeatherLayerChange('temp')}
-                        />
-                        <Label htmlFor="temp">Temperature</Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Switch 
-                          id="wind" 
-                          checked={weatherLayers.wind}
-                          onCheckedChange={() => handleWeatherLayerChange('wind')}
-                        />
-                        <Label htmlFor="wind">Wind</Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Switch 
-                          id="visibility" 
-                          checked={weatherLayers.visibility}
-                          onCheckedChange={() => handleWeatherLayerChange('visibility')}
-                        />
-                        <Label htmlFor="visibility">Visibility</Label>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="flex items-center justify-center gap-2 p-4 rounded-md bg-secondary/20">
+                        <Activity className="h-5 w-5 text-primary" />
+                        <span className="text-sm font-medium">Weather data visualization is simplified in 2D mode</span>
                       </div>
                     </div>
                   </div>
