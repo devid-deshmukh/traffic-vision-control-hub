@@ -134,7 +134,7 @@ export default function CityMap() {
                 </div>
               </div>
               
-              <div className="absolute bottom-4 left-4 right-4 glass-card p-3 backdrop-blur-md">
+              <div className="absolute bottom-4 left-4 right-4 glass-card p-3 backdrop-blur-md inline-block">
                 <TabsContent value="traffic" className="m-0">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">

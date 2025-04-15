@@ -11,7 +11,7 @@ interface LayoutProps {
 
 export default function Layout({ children, title, subtitle }: LayoutProps) {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex w-full">
       <AppSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title={title} subtitle={subtitle} />

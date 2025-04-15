@@ -22,7 +22,7 @@ const MapView = () => {
           
           <ResizableHandle withHandle />
           
-          <ResizablePanel defaultSize={30} minSize={25}>
+          <ResizablePanel defaultSize={40} minSize={5}>
             <Tabs defaultValue="control" className="h-full">
               <div className="flex justify-between items-center border-b px-4 py-2">
                 <h2 className="flex items-center gap-2 font-medium">
