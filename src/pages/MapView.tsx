@@ -6,9 +6,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { useTheme } from "@/context/ThemeContext";
+import { useState } from "react";
 
 const MapView = () => {
   const { theme } = useTheme();
+  const [mapMode, setMapMode] = useState<"2d" | "3d">("3d");
+  
+  const handleMapModeChange = (mode: "2d" | "3d") => {
+    setMapMode(mode);
+  };
   
   return (
     <Layout

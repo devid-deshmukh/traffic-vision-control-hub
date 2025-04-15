@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -183,6 +182,11 @@ export default function CityMap() {
       setZoom(1);
       setRotation(0);
       setMapPosition({ x: 0, y: 0 });
+      
+      // If switching to 3D mode and weather tab is selected, change to traffic tab
+      if (value === "3d" && selectedTab === "weather") {
+        setSelectedTab("traffic");
+      }
     }
   };
 
