@@ -5,51 +5,53 @@
 
 @layer base {
   :root {
-    /* Light mode colors - updated as per request */
-    --background: 0 0% 98%;  /* #F9FAFB */
-    --foreground: 222 47% 11%;  /* #111827 */
-
-    --card: 0 0% 100%;  /* #FFFFFF */
-    --card-foreground: 222 47% 11%;  /* #111827 */
-
-    --popover: 0 0% 100%;  /* #FFFFFF */
-    --popover-foreground: 222 47% 11%;  /* #111827 */
-
-    --primary: 217 91% 53%;  /* #2563EB */
-    --primary-foreground: 0 0% 100%;  /* #FFFFFF */
-
-    --secondary: 142 72% 45%;  /* #22C55E */
-    --secondary-foreground: 222 47% 11%;  /* #111827 */
-
-    --muted: 220 14% 96%;  /* #F1F5F9 */
-    --muted-foreground: 220 9% 46%;  /* #6B7280 */
-
-    --accent: 217 91% 53%;  /* #2563EB */
-    --accent-foreground: 0 0% 100%;  /* #FFFFFF */
-
-    --destructive: 0 84% 60%;  /* #EF4444 */
-    --destructive-foreground: 0 0% 100%;  /* #FFFFFF */
-
-    --border: 220 13% 91%;  /* #E5E7EB */
-    --input: 220 13% 91%;  /* #E5E7EB */
-    --ring: 217 91% 53%;  /* #2563EB */
-    
-    --radius: 0.75rem;
-
-    /* Traffic colors for heatmap - keep these */
-    --traffic-green: 142 72% 45%;  /* #22C55E - smooth traffic */
-    --traffic-yellow: 47 96% 53%;  /* #FACC15 - moderate congestion */
-    --traffic-red: 0 84% 60%;  /* #EF4444 - severe congestion */
-
-    --sidebar-background: 220 14% 96%;  /* #F1F5F9 */
-    --sidebar-foreground: 222 47% 11%;  /* #111827 */
-    --sidebar-primary: 217 91% 53%;  /* #2563EB */
-    --sidebar-primary-foreground: 0 0% 100%;  /* #FFFFFF */
-    --sidebar-accent: 220 14% 96%;  /* #F1F5F9 */
-    --sidebar-accent-foreground: 222 47% 11%;  /* #111827 */
-    --sidebar-border: 220 13% 91%;  /* #E5E7EB */
-    --sidebar-ring: 217 91% 53%;  /* #2563EB */
+    /* Soft, clean base with pastel hues */
+    --background: 210 60% 98%;        /* #F5FAFF - ultra-light pastel blue */
+    --foreground: 222 47% 12%;        /* #111827 - dark navy for text */
+  
+    --card: 0 0% 100%;                /* #FFFFFF - clean white */
+    --card-foreground: 222 47% 12%;   /* #111827 */
+  
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 12%;
+  
+    --primary: 221 83% 53%;           /* #3B82F6 - vibrant blue */
+    --primary-foreground: 0 0% 100%;  /* white text on blue */
+  
+    --secondary: 174 60% 60%;         /* #34D399 - soft emerald green */
+    --secondary-foreground: 222 47% 12%;
+  
+    --muted: 210 40% 96%;             /* #E6F0FA - subtle muted blue-gray */
+    --muted-foreground: 220 9% 46%;   /* #6B7280 */
+  
+    --accent: 219 100% 90%;           /* #E0F2FE - baby blue accent for cards/hover */
+    --accent-foreground: 222 47% 12%;
+  
+    --destructive: 0 84% 63%;         /* #F87171 - soft red for errors */
+    --destructive-foreground: 0 0% 100%;
+  
+    --border: 210 30% 90%;            /* #E0E8F0 - subtle borders */
+    --input: 210 30% 90%;
+    --ring: 221 83% 53%;              /* same blue as primary for focus rings */
+  
+    --radius: 0.75rem;                /* soft rounding for cards and components */
+  
+    /* Traffic status heatmap - unchanged */
+    --traffic-green: 142 72% 45%;     /* #22C55E */
+    --traffic-yellow: 47 96% 53%;     /* #FACC15 */
+    --traffic-red: 0 84% 60%;         /* #EF4444 */
+  
+    /* Sidebar styling - coherent with soft theme */
+    --sidebar-background: 210 60% 98%;        /* match body background */
+    --sidebar-foreground: 222 47% 12%;
+    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;            /* soft hover color */
+    --sidebar-accent-foreground: 222 47% 12%;
+    --sidebar-border: 210 30% 90%;
+    --sidebar-ring: 221 83% 53%;
   }
+  
 
   .dark {
     /* Keep existing dark mode colors */
