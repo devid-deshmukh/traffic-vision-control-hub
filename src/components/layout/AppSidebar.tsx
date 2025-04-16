@@ -23,21 +23,28 @@ import {
   Map,
   LogOut,
   BellRing,
-  MessageSquare,
-  AlertTriangle,
-  PlayCircle
+  AlertTriangle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
 
 export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, logout } = useAuth();
   const [alerts, setAlerts] = useState(3);
+  
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications] = useState([
+    { id: 1, title: "Traffic Accident", message: "Major accident reported on Highway 101", time: "2 min ago" },
+    { id: 2, title: "Congestion Alert", message: "Heavy congestion detected in Downtown area", time: "15 min ago" },
+    { id: 3, title: "System Update", message: "New traffic analysis features available", time: "1 hour ago" }
+  ]);
   
   const navigationItems = [
     {
@@ -53,7 +60,7 @@ export function AppSidebar() {
     {
       title: "Traffic Simulation",
       path: "/simulation",
-      icon: PlayCircle,
+      icon: Gauge,
     },
     {
       title: "Analytics",
@@ -91,10 +98,11 @@ export function AppSidebar() {
   };
 
   const handleSignOut = () => {
-    toast({
-      title: "Signed out",
-      description: "You have been logged out of your account.",
-    });
+    logout();
+  };
+
+  const handleNotificationsClick = () => {
+    setShowNotifications(!showNotifications);
   };
 
   return (
@@ -112,11 +120,13 @@ export function AppSidebar() {
           <div className="flex items-center gap-4 mb-6">
             <Avatar>
               <AvatarImage src="" />
-              <AvatarFallback className="bg-primary text-primary-foreground">TA</AvatarFallback>
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                {user ? user.name.substring(0, 2).toUpperCase() : "TA"}
+              </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium">Traffic Admin</p>
-              <p className="text-xs text-muted-foreground">City Operations</p>
+              <p className="font-medium">{user ? user.name : "Traffic Admin"}</p>
+              <p className="text-xs text-muted-foreground">{user ? user.role : "City Operations"}</p>
             </div>
           </div>
         </div>
@@ -158,22 +168,37 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="transition-colors hover:bg-sidebar-accent/50 group" onClick={handleAlertsClick}>
+                <SidebarMenuButton className="transition-colors hover:bg-sidebar-accent/50 group" onClick={handleNotificationsClick}>
                   <div className="flex items-center gap-3">
                     <BellRing className="h-5 w-5 text-primary group-hover:text-primary" />
                     <span>Notifications</span>
-                    <Badge variant="default" className="ml-auto">{alerts}</Badge>
+                    <Badge variant="default" className="ml-auto">{notifications.length}</Badge>
                   </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="transition-colors hover:bg-sidebar-accent/50">
-                  <div className="flex items-center gap-3">
-                    <MessageSquare className="h-5 w-5" />
-                    <span>Team Chat</span>
+              
+              {/* Notifications dropdown - only appears when clicking the Notifications button */}
+              {showNotifications && (
+                <div className="ml-4 mr-2 mt-2 bg-card rounded-md shadow-md border border-border/40 overflow-hidden">
+                  <div className="p-3 border-b border-border/40">
+                    <h3 className="font-medium text-sm">Recent Notifications</h3>
                   </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+                  <div className="max-h-[250px] overflow-y-auto">
+                    {notifications.map(notification => (
+                      <div key={notification.id} className="p-3 border-b border-border/40 hover:bg-muted/50 cursor-pointer">
+                        <div className="flex justify-between items-start">
+                          <h4 className="font-medium text-xs">{notification.title}</h4>
+                          <span className="text-xs text-muted-foreground">{notification.time}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="p-2 flex justify-center border-t border-border/40">
+                    <Button variant="ghost" size="sm" className="w-full text-xs">View All</Button>
+                  </div>
+                </div>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

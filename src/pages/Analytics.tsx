@@ -1,13 +1,45 @@
-
+import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Download, Calendar, BarChart3, LineChart, PieChart, Share2 } from "lucide-react";
-import { AreaChart, Area, BarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { 
+  AreaChart, Area, BarChart, Bar, LineChart as RechartsLineChart, 
+  Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, 
+  CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+} from 'recharts';
 
-// Sample data for charts
+const hourlyData = [
+  { time: '6am', congestionLevel: 20 },
+  { time: '8am', congestionLevel: 85 },
+  { time: '10am', congestionLevel: 45 },
+  { time: '12pm', congestionLevel: 50 },
+  { time: '2pm', congestionLevel: 40 },
+  { time: '4pm', congestionLevel: 70 },
+  { time: '6pm', congestionLevel: 90 },
+  { time: '8pm', congestionLevel: 60 },
+  { time: '10pm', congestionLevel: 30 },
+];
+
+const dailyData = [
+  { time: 'Monday', congestionLevel: 65 },
+  { time: 'Tuesday', congestionLevel: 55 },
+  { time: 'Wednesday', congestionLevel: 60 },
+  { time: 'Thursday', congestionLevel: 70 },
+  { time: 'Friday', congestionLevel: 85 },
+  { time: 'Saturday', congestionLevel: 40 },
+  { time: 'Sunday', congestionLevel: 30 },
+];
+
+const weeklyData = [
+  { time: 'Week 1', congestionLevel: 45 },
+  { time: 'Week 2', congestionLevel: 50 },
+  { time: 'Week 3', congestionLevel: 65 },
+  { time: 'Week 4', congestionLevel: 70 },
+];
+
 const trafficVolumeData = [
   { name: 'Mon', downtown: 4000, residential: 2400, highway: 8000 },
   { name: 'Tue', downtown: 5000, residential: 2200, highway: 9800 },
@@ -39,6 +71,17 @@ const incidentData = [
 ];
 
 const Analytics = () => {
+  const [timeframe, setTimeframe] = useState("hour");
+  
+  const getTimeframeData = () => {
+    switch(timeframe) {
+      case "hour": return hourlyData;
+      case "day": return dailyData;
+      case "week": return weeklyData;
+      default: return hourlyData;
+    }
+  };
+
   return (
     <Layout
       title="Traffic Analytics"
@@ -184,7 +227,15 @@ const Analytics = () => {
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis dataKey="time" tick={{ fill: '#9ca3af' }} />
-                    <YAxis tick={{ fill: '#9ca3af' }} />
+                    <YAxis 
+                      tick={{ fill: '#9ca3af' }} 
+                      label={{ 
+                        value: 'Congestion Level in %', 
+                        angle: -90, 
+                        position: 'insideLeft',
+                        style: { fill: '#9ca3af' } 
+                      }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'rgba(30, 41, 59, 0.9)', 
@@ -211,7 +262,7 @@ const Analytics = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2">
             <CardHeader>
-              <Tabs defaultValue="hour">
+              <Tabs defaultValue="hour" onValueChange={value => setTimeframe(value)}>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base">Detailed Traffic Analysis</CardTitle>
                   <TabsList>
@@ -227,23 +278,39 @@ const Analytics = () => {
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <RechartsLineChart
-                    data={trafficVolumeData}
+                    data={getTimeframeData()}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="name" tick={{ fill: '#9ca3af' }} />
-                    <YAxis tick={{ fill: '#9ca3af' }} />
+                    <XAxis 
+                      dataKey="time" 
+                      tick={{ fill: '#9ca3af' }}
+                    />
+                    <YAxis 
+                      tick={{ fill: '#9ca3af' }} 
+                      label={{ 
+                        value: 'Congestion Level in %', 
+                        angle: -90, 
+                        position: 'insideLeft',
+                        style: { fill: '#9ca3af' } 
+                      }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'rgba(30, 41, 59, 0.9)', 
                         borderColor: 'rgba(107, 114, 128, 0.3)',
                         color: '#f3f4f6'
                       }} 
+                      formatter={(value) => [`${value}%`, 'Congestion Level']}
                     />
                     <Legend />
-                    <Line type="monotone" dataKey="downtown" name="Downtown" stroke="#8b5cf6" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="residential" name="Residential" stroke="#0ea5e9" />
-                    <Line type="monotone" dataKey="highway" name="Highway" stroke="#22c55e" />
+                    <Line 
+                      type="monotone" 
+                      dataKey="congestionLevel" 
+                      name="Congestion Level" 
+                      stroke="#3b82f6" 
+                      activeDot={{ r: 8 }} 
+                    />
                   </RechartsLineChart>
                 </ResponsiveContainer>
               </div>
