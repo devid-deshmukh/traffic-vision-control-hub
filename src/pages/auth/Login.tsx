@@ -26,23 +26,26 @@ const Login = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4">
       <AnimatedBackground />
       
-      <Card className="w-full max-w-md z-10 bg-white/95 backdrop-blur-sm border-primary/10 shadow-xl">
-        <CardHeader className="space-y-1">
+      <Card className="w-full max-w-md z-10 bg-white/95 backdrop-blur-sm border-primary/10 shadow-xl 
+        sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 
+        transform transition-all duration-300 ease-in-out 
+        hover:scale-[1.01] hover:shadow-2xl">
+        <CardHeader className="space-y-1 text-center">
           <div className="flex items-center justify-center mb-2">
             <Compass className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">TrafficVision</CardTitle>
-          <CardDescription className="text-center">
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-center">TrafficVision</CardTitle>
+          <CardDescription className="text-xs sm:text-sm md:text-base text-center">
             Enter your credentials to access the dashboard
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="email">
+        <CardContent className="px-4 sm:px-6 md:px-8">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <div className="space-y-1 sm:space-y-2">
+              <label className="text-xs sm:text-sm font-medium leading-none" htmlFor="email">
                 Email
               </label>
               <Input
@@ -52,15 +55,15 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-white"
+                className="bg-white text-xs sm:text-sm"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1 sm:space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="password">
+                <label className="text-xs sm:text-sm font-medium leading-none" htmlFor="password">
                   Password
                 </label>
-                <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                <Link to="/forgot-password" className="text-xs sm:text-sm text-primary hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -71,10 +74,14 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-white"
+                className="bg-white text-xs sm:text-sm"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              className="w-full text-xs sm:text-sm" 
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
@@ -86,8 +93,8 @@ const Login = () => {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="text-sm text-center">
+        <CardFooter className="flex flex-col space-y-2 sm:space-y-4">
+          <div className="text-xs sm:text-sm text-center">
             Don't have an account?{" "}
             <Link to="/signup" className="text-primary font-medium hover:underline">
               Sign up
@@ -100,3 +107,4 @@ const Login = () => {
 };
 
 export default Login;
+
