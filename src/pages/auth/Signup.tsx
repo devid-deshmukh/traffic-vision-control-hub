@@ -56,9 +56,6 @@ const Signup = () => {
             <Compass className="h-10 w-10 text-primary" />
           </div>
           <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold">Create an Account</CardTitle>
-          <CardDescription className="text-xs sm:text-sm md:text-base">
-            Sign up to access TrafficVision dashboard
-          </CardDescription>
         </CardHeader>
         <CardContent className="px-4 sm:px-6 md:px-8">
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">

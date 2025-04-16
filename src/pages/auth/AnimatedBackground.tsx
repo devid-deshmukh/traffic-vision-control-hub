@@ -30,7 +30,8 @@ const AnimatedBackground = () => {
         this.size = Math.random() * 5 + 1;
         this.speedX = Math.random() * 1 - 0.5;
         this.speedY = Math.random() * 1 - 0.5;
-        this.color = `hsla(221, 83%, ${50 + Math.random() * 20}%, ${0.3 + Math.random() * 0.3})`;
+        // Darker, more subdued colors
+        this.color = `hsla(221, 83%, ${30 + Math.random() * 15}%, ${0.2 + Math.random() * 0.3})`;
       }
 
       update() {
@@ -73,7 +74,7 @@ const AnimatedBackground = () => {
 
           if (distance < maxDistance) {
             const opacity = 1 - distance / maxDistance;
-            ctx.strokeStyle = `rgba(59, 130, 246, ${opacity * 0.5})`;
+            ctx.strokeStyle = `rgba(59, 130, 246, ${opacity * 0.3})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particleArray[a].x, particleArray[a].y);
@@ -88,10 +89,10 @@ const AnimatedBackground = () => {
       if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Add a subtle gradient background
+      // Dark overlay with gradient
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, "rgba(239, 246, 255, 0.5)");
-      gradient.addColorStop(1, "rgba(219, 234, 254, 0.5)");
+      gradient.addColorStop(0, "rgba(10, 15, 30, 0.95)");
+      gradient.addColorStop(1, "rgba(15, 23, 42, 0.95)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
