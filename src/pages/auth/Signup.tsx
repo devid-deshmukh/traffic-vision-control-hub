@@ -45,11 +45,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4">
+    <div className="fixed inset-0 w-full h-full flex items-center justify-center overflow-hidden">
       <AnimatedBackground />
       
-      <Card className="w-full max-w-md z-10 bg-white/95 backdrop-blur-sm border-primary/10 shadow-xl 
-        sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 
+      <Card className="w-[90%] max-w-md z-10 bg-white/95 backdrop-blur-sm border-primary/10 shadow-xl 
         transform transition-all duration-300 ease-in-out 
         hover:scale-[1.01] hover:shadow-2xl">
         <CardHeader className="space-y-1 text-center">
@@ -155,4 +154,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
