@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -12,6 +11,12 @@ import {
 } from "@/components/ui/card";
 import { Compass, Loader2 } from "lucide-react";
 import AnimatedBackground from "./AnimatedBackground";
+import { 
+  CarButtonAnimation, 
+  NeonCarAnimation,
+  SmartRouteAnimation,
+  TrafficLightLoader
+} from "@/components/animations/TrafficAnimations";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -53,8 +58,17 @@ const Signup = () => {
           <div className="flex items-center justify-center mb-2">
             <Compass className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-black">Create an Account</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-black font-gruppo tracking-widest">
+            Create an Account
+          </CardTitle>
+          <TrafficLightLoader loading={isLoading} />
         </CardHeader>
+        
+        {/* Top animation - neon car */}
+        <div className="px-4 sm:px-6 md:px-8">
+          <NeonCarAnimation className="w-full h-16 mx-auto" />
+        </div>
+        
         <CardContent className="px-4 sm:px-6 md:px-8">
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div className="space-y-1 sm:space-y-2">
@@ -119,10 +133,10 @@ const Signup = () => {
               )}
             </div>
             
-            <Button 
-              type="submit" 
-              className="w-full text-xs sm:text-sm" 
+            <CarButtonAnimation 
               disabled={isLoading}
+              onClick={() => {}}
+              type="submit"
             >
               {isLoading ? (
                 <>
@@ -132,10 +146,13 @@ const Signup = () => {
               ) : (
                 "Sign up"
               )}
-            </Button>
+            </CarButtonAnimation>
           </form>
         </CardContent>
+        
         <div className="flex flex-col space-y-2 sm:space-y-4 px-6 pb-6">
+          <SmartRouteAnimation className="h-16 mx-auto" />
+          
           <div className="text-xs sm:text-sm text-center text-black">
             Already have an account?{" "}
             <Link to="/login" className="text-primary font-medium hover:underline">

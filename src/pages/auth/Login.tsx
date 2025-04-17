@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   Card, 
@@ -12,6 +11,14 @@ import {
 } from "@/components/ui/card";
 import { Compass, Loader2 } from "lucide-react";
 import AnimatedBackground from "./AnimatedBackground";
+import { 
+  CarButtonAnimation, 
+  CarRoadAnimation,
+  CityTrafficAnimation,
+  NeonCarAnimation,
+  SmartRouteAnimation,
+  TrafficLightLoader
+} from "@/components/animations/TrafficAnimations";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,10 +41,17 @@ const Login = () => {
           <div className="flex items-center justify-center mb-2">
             <Compass className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-black">
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-black font-gruppo tracking-widest">
             TrafficVision
           </CardTitle>
+          <TrafficLightLoader loading={isLoading} />
         </CardHeader>
+        
+        {/* Top animation */}
+        <div className="px-4 sm:px-6 md:px-8">
+          <CityTrafficAnimation className="w-full h-20 mx-auto opacity-80" />
+        </div>
+        
         <CardContent className="px-4 sm:px-6 md:px-8">
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div className="space-y-1 sm:space-y-2">
@@ -73,10 +87,11 @@ const Login = () => {
                 className="bg-white text-xs sm:text-sm text-black"
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full text-xs sm:text-sm" 
+            
+            <CarButtonAnimation 
               disabled={isLoading}
+              onClick={() => {}}
+              type="submit"
             >
               {isLoading ? (
                 <>
@@ -86,16 +101,21 @@ const Login = () => {
               ) : (
                 "Sign in"
               )}
-            </Button>
+            </CarButtonAnimation>
           </form>
         </CardContent>
-        <div className="flex flex-col space-y-2 sm:space-y-4 px-6 pb-6">
+        
+        <div className="flex flex-col space-y-2 sm:space-y-4 px-6 pb-3">
+          <SmartRouteAnimation className="h-16 mx-auto" />
+          
           <div className="text-xs sm:text-sm text-center text-black">
             Don't have an account?{" "}
             <Link to="/signup" className="text-primary font-medium hover:underline">
               Sign up
             </Link>
           </div>
+          
+          <CarRoadAnimation />
         </div>
       </Card>
     </div>

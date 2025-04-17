@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -115,6 +116,46 @@ export default {
           '0%': { opacity: '1' },
           '33%, 66%': { opacity: '0' },
           '100%': { opacity: '1' }
+        },
+        'car-drive': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(calc(100vw))' }
+        },
+        'car-horizontal': {
+          '0%': { transform: 'translateX(-30px)' },
+          '100%': { transform: 'translateX(calc(100% + 30px))' }
+        },
+        'car-horizontal-delay': {
+          '0%': { transform: 'translateX(-30px)' },
+          '100%': { transform: 'translateX(calc(100% + 30px))' }
+        },
+        'car-vertical': {
+          '0%': { transform: 'translateY(-30px)' },
+          '100%': { transform: 'translateY(calc(100% + 30px))' }
+        },
+        'car-vertical-delay': {
+          '0%': { transform: 'translateY(-30px)' },
+          '100%': { transform: 'translateY(calc(100% + 30px))' }
+        },
+        'neon-car-drive': {
+          '0%': { transform: 'translateX(-40px)' },
+          '100%': { transform: 'translateX(calc(100% + 40px))' }
+        },
+        'button-car-drive': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(calc(100% - 30px))' }
+        },
+        'traffic-red': {
+          '0%, 100%': { backgroundColor: '#FF4757', boxShadow: '0 0 8px #FF4757' },
+          '50%': { backgroundColor: '#FF4757', boxShadow: '0 0 12px #FF4757' }
+        },
+        'traffic-amber': {
+          '0%, 100%': { backgroundColor: '#FFA502', boxShadow: '0 0 8px #FFA502' },
+          '50%': { backgroundColor: '#FFA502', boxShadow: '0 0 12px #FFA502' }
+        },
+        'traffic-green': {
+          '0%, 100%': { backgroundColor: '#2ED573', boxShadow: '0 0 8px #2ED573' },
+          '50%': { backgroundColor: '#2ED573', boxShadow: '0 0 12px #2ED573' }
         }
       },
       animation: {
@@ -125,7 +166,21 @@ export default {
         'fade-in': 'fade-in 0.5s ease-out',
         'traffic-flow': 'traffic-flow 4s linear infinite',
         'bg-fade-1': 'bg-fade-1 6s linear infinite',
-        'bg-fade-2': 'bg-fade-2 6s linear infinite'
+        'bg-fade-2': 'bg-fade-2 6s linear infinite',
+        'car-drive': 'car-drive 8s linear infinite',
+        'car-horizontal': 'car-horizontal 5s linear infinite',
+        'car-horizontal-delay': 'car-horizontal 5s linear infinite 2.5s',
+        'car-vertical': 'car-vertical 6s linear infinite',
+        'car-vertical-delay': 'car-vertical 6s linear infinite 3s',
+        'neon-car-drive': 'neon-car-drive 6s linear infinite',
+        'button-car-drive': 'button-car-drive 1.5s ease-in-out infinite',
+        'traffic-red': 'traffic-red 2s ease-in-out infinite 0.1s',
+        'traffic-amber': 'traffic-amber 2s ease-in-out infinite 0.3s',
+        'traffic-green': 'traffic-green 2s ease-in-out infinite 0.5s'
+      },
+      boxShadow: {
+        'neon-cyan': '0 0 5px 1px rgba(6, 182, 212, 0.7)',
+        'glow': '0 0 3px currentColor'
       }
     }
   },
