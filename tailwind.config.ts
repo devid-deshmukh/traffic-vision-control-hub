@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -80,6 +79,9 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
       },
+      fontFamily: {
+        gruppo: ['Gruppo', 'cursive'],
+      },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },
@@ -104,6 +106,15 @@ export default {
         'traffic-flow': {
           '0%': { strokeDashoffset: '200' },
           '100%': { strokeDashoffset: '0' }
+        },
+        'bg-fade-1': {
+          '0%, 33%': { opacity: '1' },
+          '66%, 100%': { opacity: '0' }
+        },
+        'bg-fade-2': {
+          '0%': { opacity: '1' },
+          '33%, 66%': { opacity: '0' },
+          '100%': { opacity: '1' }
         }
       },
       animation: {
@@ -112,7 +123,9 @@ export default {
         'pulse-slow': 'pulse-slow 4s ease-in-out infinite',
         'spin-slow': 'spin-slow 10s linear infinite',
         'fade-in': 'fade-in 0.5s ease-out',
-        'traffic-flow': 'traffic-flow 4s linear infinite'
+        'traffic-flow': 'traffic-flow 4s linear infinite',
+        'bg-fade-1': 'bg-fade-1 6s linear infinite',
+        'bg-fade-2': 'bg-fade-2 6s linear infinite'
       }
     }
   },
