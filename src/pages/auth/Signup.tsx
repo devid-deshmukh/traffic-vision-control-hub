@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -55,12 +53,12 @@ const Signup = () => {
           <div className="flex items-center justify-center mb-2">
             <Compass className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold">Create an Account</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-black">Create an Account</CardTitle>
         </CardHeader>
         <CardContent className="px-4 sm:px-6 md:px-8">
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div className="space-y-1 sm:space-y-2">
-              <label className="text-xs sm:text-sm font-medium leading-none" htmlFor="name">
+              <label className="text-xs sm:text-sm font-medium leading-none text-black" htmlFor="name">
                 Full Name
               </label>
               <Input
@@ -69,12 +67,12 @@ const Signup = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="bg-white text-xs sm:text-sm"
+                className="bg-white text-xs sm:text-sm text-black"
               />
             </div>
             
             <div className="space-y-1 sm:space-y-2">
-              <label className="text-xs sm:text-sm font-medium leading-none" htmlFor="email">
+              <label className="text-xs sm:text-sm font-medium leading-none text-black" htmlFor="email">
                 Email
               </label>
               <Input
@@ -84,12 +82,12 @@ const Signup = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-white text-xs sm:text-sm"
+                className="bg-white text-xs sm:text-sm text-black"
               />
             </div>
             
             <div className="space-y-1 sm:space-y-2">
-              <label className="text-xs sm:text-sm font-medium leading-none" htmlFor="password">
+              <label className="text-xs sm:text-sm font-medium leading-none text-black" htmlFor="password">
                 Password
               </label>
               <Input
@@ -99,12 +97,12 @@ const Signup = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-white text-xs sm:text-sm"
+                className="bg-white text-xs sm:text-sm text-black"
               />
             </div>
             
             <div className="space-y-1 sm:space-y-2">
-              <label className="text-xs sm:text-sm font-medium leading-none" htmlFor="confirmPassword">
+              <label className="text-xs sm:text-sm font-medium leading-none text-black" htmlFor="confirmPassword">
                 Confirm Password
               </label>
               <Input
@@ -114,7 +112,7 @@ const Signup = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="bg-white text-xs sm:text-sm"
+                className="bg-white text-xs sm:text-sm text-black"
               />
               {passwordError && (
                 <p className="text-xs sm:text-sm text-destructive">{passwordError}</p>
@@ -137,14 +135,14 @@ const Signup = () => {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2 sm:space-y-4">
-          <div className="text-xs sm:text-sm text-center">
+        <div className="flex flex-col space-y-2 sm:space-y-4 px-6 pb-6">
+          <div className="text-xs sm:text-sm text-center text-black">
             Already have an account?{" "}
             <Link to="/login" className="text-primary font-medium hover:underline">
               Sign in
             </Link>
           </div>
-        </CardFooter>
+        </div>
       </Card>
     </div>
   );
