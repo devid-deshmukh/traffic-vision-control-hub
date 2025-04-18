@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -64,7 +63,6 @@ const Signup = () => {
           <TrafficLightLoader loading={isLoading} />
         </CardHeader>
         
-        {/* Top animation - neon car */}
         <div className="px-4 sm:px-6 md:px-8">
           <NeonCarAnimation className="w-full h-16 mx-auto" />
         </div>
@@ -136,7 +134,7 @@ const Signup = () => {
             <CarButtonAnimation 
               disabled={isLoading}
               onClick={() => {}}
-              type="submit"
+              className="w-full"
             >
               {isLoading ? (
                 <>

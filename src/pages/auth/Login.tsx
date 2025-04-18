@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -13,9 +12,7 @@ import { Compass, Loader2 } from "lucide-react";
 import AnimatedBackground from "./AnimatedBackground";
 import { 
   CarButtonAnimation, 
-  CarRoadAnimation,
   CityTrafficAnimation,
-  NeonCarAnimation,
   SmartRouteAnimation,
   TrafficLightLoader
 } from "@/components/animations/TrafficAnimations";
@@ -47,7 +44,6 @@ const Login = () => {
           <TrafficLightLoader loading={isLoading} />
         </CardHeader>
         
-        {/* Top animation */}
         <div className="px-4 sm:px-6 md:px-8">
           <CityTrafficAnimation className="w-full h-20 mx-auto opacity-80" />
         </div>
@@ -91,7 +87,7 @@ const Login = () => {
             <CarButtonAnimation 
               disabled={isLoading}
               onClick={() => {}}
-              type="submit"
+              className="w-full"
             >
               {isLoading ? (
                 <>
@@ -114,8 +110,6 @@ const Login = () => {
               Sign up
             </Link>
           </div>
-          
-          <CarRoadAnimation />
         </div>
       </Card>
     </div>
