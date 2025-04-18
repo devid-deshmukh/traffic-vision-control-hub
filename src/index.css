@@ -9,50 +9,70 @@
     /* Soft, clean base with pastel hues */
     --background: 210 60% 98%;        /* #F5FAFF - ultra-light pastel blue */
     --foreground: 222 47% 12%;        /* #111827 - dark navy for text */
-  
+
     --card: 0 0% 100%;                /* #FFFFFF - clean white */
-    --card-foreground: 222 47% 12%;   /* #111827 */
-  
+    --card-foreground: 222 47% 12%;    /* #111827 */
+
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 12%;
-  
-    --primary: 221 83% 53%;           /* #3B82F6 - vibrant blue */
-    --primary-foreground: 0 0% 100%;  /* white text on blue */
-  
-    --secondary: 174 60% 60%;         /* #34D399 - soft emerald green */
+
+    --primary: 221 83% 53%;            /* #3B82F6 - vibrant blue */
+    --primary-foreground: 0 0% 100%;   /* white text on blue */
+
+    --secondary: 174 60% 60%;          /* #34D399 - soft emerald green */
     --secondary-foreground: 222 47% 12%;
-  
-    --muted: 210 40% 96%;             /* #E6F0FA - subtle muted blue-gray */
-    --muted-foreground: 220 9% 46%;   /* #6B7280 */
-  
-    --accent: 219 100% 90%;           /* #E0F2FE - baby blue accent for cards/hover */
+
+    --muted: 210 40% 96%;              /* #E6F0FA - subtle muted blue-gray */
+    --muted-foreground: 220 9% 46%;    /* #6B7280 */
+
+    --accent: 219 100% 90%;            /* #E0F2FE - baby blue accent for cards/hover */
     --accent-foreground: 222 47% 12%;
-  
-    --destructive: 0 84% 63%;         /* #F87171 - soft red for errors */
+
+    --destructive: 0 84% 63%;          /* #F87171 - soft red for errors */
     --destructive-foreground: 0 0% 100%;
-  
+
     --border: 210 30% 90%;            /* #E0E8F0 - subtle borders */
     --input: 210 30% 90%;
     --ring: 221 83% 53%;              /* same blue as primary for focus rings */
-  
+
     --radius: 0.75rem;                /* soft rounding for cards and components */
-  
+
     /* Traffic status heatmap - unchanged */
-    --traffic-green: 142 72% 45%;     /* #22C55E */
+    --traffic-green: 142 72% 45%;      /* #22C55E */
     --traffic-yellow: 47 96% 53%;     /* #FACC15 */
-    --traffic-red: 0 84% 60%;         /* #EF4444 */
-  
+    --traffic-red: 0 84% 60%;        /* #EF4444 */
+
     /* Sidebar styling - coherent with soft theme */
     --sidebar-background: 210 60% 98%;        /* match body background */
     --sidebar-foreground: 222 47% 12%;
     --sidebar-primary: 221 83% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;            /* soft hover color */
+    --sidebar-accent: 210 40% 96%;          /* soft hover color */
     --sidebar-accent-foreground: 222 47% 12%;
     --sidebar-border: 210 30% 90%;
     --sidebar-ring: 221 83% 53%;
+
+    /* Animation Keyframes */
+    @keyframes carHorizontal {
+      from { transform: translateX(-100px); }
+      to { transform: translateX(calc(100vw + 100px)); }
+    }
+
+    @keyframes carHorizontalReverse {
+      from { transform: translateX(calc(100vw + 100px)); }
+      to { transform: translateX(-100px); }
+    }
+
+    @keyframes carVertical {
+      from { transform: translateY(-100px); }
+      to { transform: translateY(calc(100vh + 100px)); }
+    }
+
+    @keyframes carVerticalReverse {
+      from { transform: translateY(calc(100vh + 100px)); }
+      to { transform: translateY(-100px); }
+    }
   }
-  
 
   .dark {
     /* Keep existing dark mode colors */
@@ -83,13 +103,13 @@
     --border: 216 34% 17%;
     --input: 217 32% 18%;
     --ring: 224 76% 48%;
-    
+
     --radius: 0.75rem;
 
     /* Traffic colors for heatmap */
     --traffic-green: 142 72% 45%;  /* #22C55E */
-    --traffic-yellow: 47 96% 53%;  /* #FACC15 */
-    --traffic-red: 0 84% 60%;  /* #EF4444 */
+    --traffic-yellow: 47 96% 53%; /* #FACC15 */
+    --traffic-red: 0 84% 60%;    /* #EF4444 */
 
     --sidebar-background: 225 32% 10%;
     --sidebar-foreground: 210 40% 98%;
@@ -104,7 +124,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border: var(--border); /* Replaced @apply border-border with custom --border */
   }
 
   body {
@@ -135,11 +155,11 @@
   .glass-card {
     @apply bg-secondary/5 backdrop-blur-sm border border-border/80 rounded-lg shadow-sm;
   }
-  
+
   .data-point {
     @apply inline-flex items-center gap-1.5 text-sm;
   }
-  
+
   .animated-border {
     @apply relative before:absolute before:inset-0 before:p-[1px] before:rounded-lg before:bg-gradient-to-r before:from-primary/40 before:via-primary before:to-primary/40 before:animate-pulse-slow overflow-hidden;
   }
@@ -151,4 +171,81 @@
   .traffic-link {
     @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
   }
+}
+
+@layer utilities {
+  /* Vehicle Animation Classes */
+  .animate-car-horizontal {
+    animation: carHorizontal 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-horizontal-slow {
+    animation: carHorizontal 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-horizontal-extra-slow {
+    animation: carHorizontal 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-horizontal-reverse {
+    animation: carHorizontalReverse 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-horizontal-reverse-slow {
+    animation: carHorizontalReverse 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-horizontal-reverse-extra-slow {
+    animation: carHorizontalReverse 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-vertical {
+    animation: carVertical 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-vertical-slow {
+    animation: carVertical 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-vertical-extra-slow {
+    animation: carVertical 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-vertical-reverse {
+    animation: carVerticalReverse 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-vertical-reverse-slow {
+    animation: carVerticalReverse 240s linear infinite; /* Updated to 240s */
+  }
+
+  .animate-car-vertical-reverse-extra-slow {
+    animation: carVerticalReverse 240s linear infinite; /* Updated to 240s */
+  }
+
+  /* Vehicle hover effects */
+  .vehicle-hover {
+    @apply transition-transform duration-300 hover:scale-110;
+  }
+}
+
+/* Animation Keyframes */
+@keyframes carHorizontal {
+  from { transform: translateX(-100px); }
+  to { transform: translateX(calc(100vw + 100px)); }
+}
+
+@keyframes carHorizontalReverse {
+  from { transform: translateX(calc(100vw + 100px)); }
+  to { transform: translateX(-100px); }
+}
+
+@keyframes carVertical {
+  from { transform: translateY(-100px); }
+  to { transform: translateY(calc(100vh + 100px)); }
+}
+
+@keyframes carVerticalReverse {
+  from { transform: translateY(calc(100vh + 100px)); }
+  to { transform: translateY(-100px); }
 }

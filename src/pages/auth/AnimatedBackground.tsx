@@ -11,7 +11,7 @@ const AnimatedBackground = () => {
       </div>
 
       {/* Optional Overlay with lower opacity and no blur (or no overlay at all) */}
-      <div className="absolute inset-0 w-full h-full bg-white/10 backdrop-blur-[0px]" />
+      <div className="absolute inset-0 w-full h-full bg-white/ backdrop-blur-[0px]" />
     </div>
   );
 };

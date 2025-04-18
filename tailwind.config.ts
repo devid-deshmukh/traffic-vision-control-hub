@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -84,6 +83,24 @@ export default {
         gruppo: ['Gruppo', 'cursive'],
       },
       keyframes: {
+        // Vehicle Animations
+        'car-horizontal': {
+          '0%': { transform: 'translateX(-30px)' },
+          '100%': { transform: 'translateX(calc(100% + 30px))' }
+        },
+        'car-horizontal-reverse': {
+          '0%': { transform: 'translateX(calc(100% + 30px))' },
+          '100%': { transform: 'translateX(-30px)' }
+        },
+        'car-vertical': {
+          '0%': { transform: 'translateY(-30px)' },
+          '100%': { transform: 'translateY(calc(100% + 30px))' }
+        },
+        'car-vertical-reverse': {
+          '0%': { transform: 'translateY(calc(100% + 30px))' },
+          '100%': { transform: 'translateY(-30px)' }
+        },
+        // Existing Animations
         'accordion-down': {
           from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' }
@@ -117,26 +134,6 @@ export default {
           '33%, 66%': { opacity: '0' },
           '100%': { opacity: '1' }
         },
-        'car-drive': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(calc(100vw))' }
-        },
-        'car-horizontal': {
-          '0%': { transform: 'translateX(-30px)' },
-          '100%': { transform: 'translateX(calc(100% + 30px))' }
-        },
-        'car-horizontal-delay': {
-          '0%': { transform: 'translateX(-30px)' },
-          '100%': { transform: 'translateX(calc(100% + 30px))' }
-        },
-        'car-vertical': {
-          '0%': { transform: 'translateY(-30px)' },
-          '100%': { transform: 'translateY(calc(100% + 30px))' }
-        },
-        'car-vertical-delay': {
-          '0%': { transform: 'translateY(-30px)' },
-          '100%': { transform: 'translateY(calc(100% + 30px))' }
-        },
         'neon-car-drive': {
           '0%': { transform: 'translateX(-40px)' },
           '100%': { transform: 'translateX(calc(100% + 40px))' }
@@ -169,9 +166,9 @@ export default {
         'bg-fade-2': 'bg-fade-2 6s linear infinite',
         'car-drive': 'car-drive 8s linear infinite',
         'car-horizontal': 'car-horizontal 5s linear infinite',
-        'car-horizontal-delay': 'car-horizontal 5s linear infinite 2.5s',
+        'car-horizontal-reverse': 'car-horizontal-reverse 5s linear infinite',
         'car-vertical': 'car-vertical 6s linear infinite',
-        'car-vertical-delay': 'car-vertical 6s linear infinite 3s',
+        'car-vertical-reverse': 'car-vertical-reverse 6s linear infinite',
         'neon-car-drive': 'neon-car-drive 6s linear infinite',
         'button-car-drive': 'button-car-drive 1.5s ease-in-out infinite',
         'traffic-red': 'traffic-red 2s ease-in-out infinite 0.1s',
