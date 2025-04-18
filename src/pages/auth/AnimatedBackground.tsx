@@ -1,6 +1,6 @@
 
 import React from "react";
-import { CarRoadAnimation } from "@/components/animations/TrafficAnimations";
+import { CityTrafficAnimation } from "@/components/animations/TrafficAnimations";
 
 const AnimatedBackground = () => {
   return (
@@ -13,9 +13,9 @@ const AnimatedBackground = () => {
         <div className="absolute inset-0 w-full h-full bg-gradient-to-[10deg] from-[#bab2fc] via-[#bab2fc] to-[#9bdaff] animate-bg-fade-2" />
       </div>
 
-      {/* Car road animation at the bottom */}
-      <div className="absolute bottom-0 left-0 right-0 w-full">
-        <CarRoadAnimation />
+      {/* City traffic animation */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-xl opacity-30">
+        <CityTrafficAnimation className="w-full h-40" />
       </div>
     </div>
   );

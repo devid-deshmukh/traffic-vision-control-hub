@@ -11,8 +11,7 @@ import {
 import { Compass, Loader2 } from "lucide-react";
 import AnimatedBackground from "./AnimatedBackground";
 import { 
-  CarButtonAnimation, 
-  CityTrafficAnimation,
+  CarButtonAnimation,
   SmartRouteAnimation,
   TrafficLightLoader
 } from "@/components/animations/TrafficAnimations";
@@ -43,10 +42,6 @@ const Login = () => {
           </CardTitle>
           <TrafficLightLoader loading={isLoading} />
         </CardHeader>
-        
-        <div className="px-4 sm:px-6 md:px-8">
-          <CityTrafficAnimation className="w-full h-20 mx-auto opacity-80" />
-        </div>
         
         <CardContent className="px-4 sm:px-6 md:px-8">
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
