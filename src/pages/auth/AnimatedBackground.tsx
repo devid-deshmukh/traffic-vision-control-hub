@@ -10,8 +10,8 @@ const AnimatedBackground = () => {
         <CityTrafficAnimation className="w-full h-full" />
       </div>
       
-      {/* Overlay gradient for better contrast */}
-      <div className="absolute inset-0 w-full h-full bg-white/80 backdrop-blur-sm" />
+      {/* Overlay gradient for better contrast - reduced opacity for better visibility of animation */}
+      <div className="absolute inset-0 w-full h-full bg-white/50 backdrop-blur-[2px]" />
     </div>
   );
 };
