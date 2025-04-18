@@ -1,6 +1,7 @@
 
 import React from "react";
 import { CityTrafficAnimation } from "@/components/animations/TrafficAnimations";
+import { cn } from "@/lib/utils";
 
 const AnimatedBackground = () => {
   return (
@@ -10,8 +11,8 @@ const AnimatedBackground = () => {
         <CityTrafficAnimation className="w-full h-full" />
       </div>
       
-      {/* Overlay gradient for better contrast - reduced opacity for better visibility of animation */}
-      <div className="absolute inset-0 w-full h-full bg-white/50 backdrop-blur-[2px]" />
+      {/* Overlay gradient for better contrast while preserving animation visibility */}
+      <div className="absolute inset-0 w-full h-full bg-white/40 backdrop-blur-[1px]" />
     </div>
   );
 };
