@@ -1,6 +1,6 @@
-
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Car, Bike, Truck, CarFront, Bus } from "lucide-react";
 
 /**
  * A looping car animation that drives on a road
@@ -33,9 +33,6 @@ export const CarRoadAnimation: React.FC = () => {
 /**
  * A top-down city traffic view animation
  */
-
-import { Car, Bike, Truck, CarFront, Bus } from "lucide-react";
-
 export const CityTrafficAnimation: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={cn("relative w-full h-24 overflow-hidden bg-slate-800 rounded-lg", className)}>
@@ -63,34 +60,34 @@ export const CityTrafficAnimation: React.FC<{ className?: string }> = ({ classNa
       </div>
 
       {/* Left to Right Vehicles */}
-      <div className="absolute top-[calc(50%-12px)] left-0 animate-car-horizontal-extra-slow vehicle-hover">
+      <div className="absolute top-[calc(50%-12px)] left-0 animate-car-horizontal-slow vehicle-hover">
         <Car className="text-[#ea384c] fill-[#ea384c]" size={24} />
       </div>
-      <div className="absolute top-[calc(50%-10px)] left-[-150px] animate-car-horizontal-extra-slow vehicle-hover">
+      <div className="absolute top-[calc(50%-10px)] left-[-150px] animate-car-horizontal-slow vehicle-hover">
         <Truck className="text-[#F97316] fill-[#F97316]" size={20} />
       </div>
 
       {/* Right to Left Vehicles */}
-      <div className="absolute top-[calc(50%-8px)] right-0 -scale-x-100 animate-car-horizontal-reverse-extra-slow vehicle-hover">
+      <div className="absolute top-[calc(50%-8px)] right-0 -scale-x-100 animate-car-horizontal-reverse-slow vehicle-hover">
         <CarFront className="text-[#0EA5E9] fill-[#0EA5E9]" size={16} />
       </div>
-      <div className="absolute top-[calc(50%-10px)] right-[-150px] -scale-x-100 animate-car-horizontal-reverse-extra-slow vehicle-hover">
+      <div className="absolute top-[calc(50%-10px)] right-[-150px] -scale-x-100 animate-car-horizontal-reverse-slow vehicle-hover">
         <Bus className="text-[#FEF7CD] fill-[#FEF7CD]" size={20} />
       </div>
 
       {/* Top to Bottom Vehicles */}
-      <div className="absolute top-0 left-[calc(50%-8px)] rotate-90 animate-car-vertical-extra-slow vehicle-hover">
+      <div className="absolute top-0 left-[calc(50%-8px)] rotate-90 animate-car-vertical-slow vehicle-hover">
         <Bike className="text-[#F2FCE2] fill-[#F2FCE2]" size={16} />
       </div>
-      <div className="absolute top-[-150px] left-[calc(50%-10px)] rotate-90 animate-car-vertical-extra-slow vehicle-hover">
+      <div className="absolute top-[-150px] left-[calc(50%-10px)] rotate-90 animate-car-vertical-slow vehicle-hover">
         <Car className="text-[#0EA5E9] fill-[#0EA5E9]" size={20} />
       </div>
 
       {/* Bottom to Top Vehicles */}
-      <div className="absolute bottom-0 left-[calc(50%-8px)] -rotate-90 animate-car-vertical-reverse-extra-slow vehicle-hover">
+      <div className="absolute bottom-0 left-[calc(50%-8px)] -rotate-90 animate-car-vertical-reverse-slow vehicle-hover">
         <CarFront className="text-[#ea384c] fill-[#ea384c]" size={16} />
       </div>
-      <div className="absolute bottom-[-150px] left-[calc(50%-10px)] -rotate-90 animate-car-vertical-reverse-extra-slow vehicle-hover">
+      <div className="absolute bottom-[-150px] left-[calc(50%-10px)] -rotate-90 animate-car-vertical-reverse-slow vehicle-hover">
         <Truck className="text-[#F97316] fill-[#F97316]" size={20} />
       </div>
     </div>

@@ -180,7 +180,7 @@
   }
 
   .animate-car-horizontal-slow {
-    animation: carHorizontal 240s linear infinite; /* Updated to 240s */
+    animation: carHorizontal 480s linear infinite; /* Doubled duration from 240s to 480s */
   }
 
   .animate-car-horizontal-extra-slow {
@@ -192,7 +192,7 @@
   }
 
   .animate-car-horizontal-reverse-slow {
-    animation: carHorizontalReverse 240s linear infinite; /* Updated to 240s */
+    animation: carHorizontalReverse 480s linear infinite; /* Doubled duration from 240s to 480s */
   }
 
   .animate-car-horizontal-reverse-extra-slow {
@@ -204,7 +204,7 @@
   }
 
   .animate-car-vertical-slow {
-    animation: carVertical 240s linear infinite; /* Updated to 240s */
+    animation: carVertical 480s linear infinite; /* Doubled duration from 240s to 480s */
   }
 
   .animate-car-vertical-extra-slow {
@@ -216,7 +216,7 @@
   }
 
   .animate-car-vertical-reverse-slow {
-    animation: carVerticalReverse 240s linear infinite; /* Updated to 240s */
+    animation: carVerticalReverse 480s linear infinite; /* Doubled duration from 240s to 480s */
   }
 
   .animate-car-vertical-reverse-extra-slow {
