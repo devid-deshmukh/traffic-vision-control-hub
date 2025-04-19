@@ -176,51 +176,51 @@
 @layer utilities {
   /* Vehicle Animation Classes */
   .animate-car-horizontal {
-    animation: carHorizontal 240s linear infinite; /* Updated to 240s */
+    animation: carHorizontal 15s linear infinite;
   }
 
   .animate-car-horizontal-slow {
-    animation: carHorizontal 480s linear infinite; /* Doubled duration from 240s to 480s */
+    animation: carHorizontal 15s linear infinite;
   }
 
   .animate-car-horizontal-extra-slow {
-    animation: carHorizontal 240s linear infinite; /* Updated to 240s */
+    animation: carHorizontal 15s linear infinite;
   }
 
   .animate-car-horizontal-reverse {
-    animation: carHorizontalReverse 240s linear infinite; /* Updated to 240s */
+    animation: carHorizontalReverse 15s linear infinite;
   }
 
   .animate-car-horizontal-reverse-slow {
-    animation: carHorizontalReverse 480s linear infinite; /* Doubled duration from 240s to 480s */
+    animation: carHorizontalReverse 15s linear infinite;
   }
 
   .animate-car-horizontal-reverse-extra-slow {
-    animation: carHorizontalReverse 240s linear infinite; /* Updated to 240s */
+    animation: carHorizontalReverse 15s linear infinite;
   }
 
   .animate-car-vertical {
-    animation: carVertical 240s linear infinite; /* Updated to 240s */
+    animation: carVertical 15s linear infinite;
   }
 
   .animate-car-vertical-slow {
-    animation: carVertical 480s linear infinite; /* Doubled duration from 240s to 480s */
+    animation: carVertical 15s linear infinite;
   }
 
   .animate-car-vertical-extra-slow {
-    animation: carVertical 240s linear infinite; /* Updated to 240s */
+    animation: carVertical 15s linear infinite;
   }
 
   .animate-car-vertical-reverse {
-    animation: carVerticalReverse 240s linear infinite; /* Updated to 240s */
+    animation: carVerticalReverse 15s linear infinite;
   }
 
   .animate-car-vertical-reverse-slow {
-    animation: carVerticalReverse 480s linear infinite; /* Doubled duration from 240s to 480s */
+    animation: carVerticalReverse 15s linear infinite;
   }
 
   .animate-car-vertical-reverse-extra-slow {
-    animation: carVerticalReverse 240s linear infinite; /* Updated to 240s */
+    animation: carVerticalReverse 15s linear infinite;
   }
 
   /* Vehicle hover effects */
